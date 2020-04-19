@@ -2,6 +2,7 @@ const ErrorResponse = require('./../helpers/ErrorResponse');
 const asyncMiddleware = require('./../helpers/asyncMiddleware');
 const User = require('./../models/UserModel');
 
+// Find a user by ID
 exports.userByID = asyncMiddleware(async (req, res, next, id) => {
   await User.findById(id)
     .populate('following', '_id name')
