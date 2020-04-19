@@ -14,6 +14,12 @@ const userSchema = new Schema({
     match: [/.+.+\..+/, 'Please fill a valid email address'],
     required: [true, 'Email is required']
   },
+  password: {
+    type: String,
+    required: [true, 'Please enter a password'],
+    minlength: 8,
+    select: false
+  },
   updated: Date,
   created: {
     type: Date,
