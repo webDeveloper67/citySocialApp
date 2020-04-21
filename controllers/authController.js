@@ -27,6 +27,31 @@ const sendTokenResponse = async (user, httpCode, res) => {
   res.status(httpCode).cookie('jwt', token, cookieOptions).json({ token });
 };
 
+// Protect Auth Middleware
+exports.protect = asyncMiddleware(async (req, res, next) => {
+  let token;
+  if (
+    req.headers.authorization &&
+    req.headers.authorization.startsWith('Bearer')
+  ) {
+    token = req.headers.authorization.split(' ')[1];
+  }
+
+  // Make sure token exist
+  if (!token) {
+    return next(new ErrorResponse('Not authorized!!', 401));
+  }
+
+  try {
+    const decoded = jwt.verify(token, process.env.JWT_SECRET);
+
+    req.user = await User.findById(decoded.id);
+    next();
+  } catch (error) {
+    return next(new ErrorResponse('Not authorized User!', 401));
+  }
+});
+
 // Sign Up a user
 exports.signup = asyncMiddleware(async (req, res, next) => {
   const { name, email, password } = req.body;

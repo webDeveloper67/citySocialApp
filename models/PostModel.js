@@ -4,7 +4,7 @@ const Schema = mongoose.Schema;
 const postSchema = new Schema({
   text: {
     type: String,
-    required: 'Name is required'
+    required: [true, 'Name is required']
   },
   photo: {
     data: Buffer,
