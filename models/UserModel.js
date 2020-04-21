@@ -38,6 +38,7 @@ const userSchema = new Schema({
   followers: [{ type: mongoose.Schema.ObjectId, ref: 'User' }]
 });
 
+// bcrypt password
 userSchema.pre('save', async function(next) {
   if (!this.isModified('password')) {
     return next();
@@ -45,6 +46,11 @@ userSchema.pre('save', async function(next) {
 
   this.password = await bcrypt.hash(this.password, 10);
 });
+
+// compare passwords
+userSchema.methods.comparePassword = async function(candidatePass, userPass) {
+  return await bcrypt.compare(candidatePass, userPass);
+};
 
 const User = mongoose.model('User', userSchema, 'users');
 
