@@ -6,6 +6,11 @@ const router = express.Router();
 
 router.route('/new/:userId').post(authCont.protect, postCont.createPost);
 
+router.route('/by/:userId').get(authCont.protect, postCont.listPostByUser);
+
+router.route('/photo/:postId').get(postCont.postPhoto);
+
 router.param('userId', userCont.userByID);
+router.param('postId', postCont.postByID);
 
 module.exports = router;
