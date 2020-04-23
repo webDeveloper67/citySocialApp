@@ -93,3 +93,41 @@ exports.unlikePost = asyncMiddleware(async (req, res, next) => {
 
   res.json(post);
 });
+
+// comment over a post
+exports.commentPost = asyncMiddleware(async (req, res, next) => {
+  let comment = req.body.comment;
+  comment.postedBy = req.body.userId;
+
+  const post = await Post.findByIdAndUpdate(
+    req.body.postId,
+    { $push: { comments: comment } },
+    { new: true }
+  )
+    .populate('comments.postedBy', '_id name')
+    .populate('postedBy', '_id name');
+
+  if (!post) {
+    return next(new ErrorResponse('You can not comment on this post', 400));
+  }
+
+  res.json(post);
+});
+
+// UnComment over a post
+exports.uncommentPost = asyncMiddleware(async (req, res, next) => {
+  let comment = req.body.comment;
+  const post = await Post.findByIdAndUpdate(
+    req.body.postId,
+    { $pull: { comments: { _id: comment._id } } },
+    { new: true }
+  )
+    .populate('comments.postedBy', '_id name')
+    .populate('postedBy', '_id name');
+
+  if (!post) {
+    return next(new ErrorResponse('You can not uncomment this post', 400));
+  }
+
+  res.json(post);
+});
