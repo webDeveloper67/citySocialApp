@@ -63,3 +63,18 @@ exports.listPostByUser = asyncMiddleware(async (req, res, next) => {
 
   res.json(posts);
 });
+
+// like a post
+exports.likePost = asyncMiddleware(async (req, res, next) => {
+  const post = await Post.findByIdAndUpdate(
+    req.body.postId,
+    { $push: { likes: req.body.userId } },
+    { new: true }
+  );
+
+  if (!post) {
+    return next(new ErrorResponse('Post can not be liked.', 400));
+  }
+
+  res.json(post);
+});
