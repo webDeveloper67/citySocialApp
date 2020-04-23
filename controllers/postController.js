@@ -78,3 +78,18 @@ exports.likePost = asyncMiddleware(async (req, res, next) => {
 
   res.json(post);
 });
+
+// UNLIKE a post
+exports.unlikePost = asyncMiddleware(async (req, res, next) => {
+  const post = await Post.findByIdAndUpdate(
+    req.body.postId,
+    { $pull: { likes: req.body.userId } },
+    { new: true }
+  );
+
+  if (!post) {
+    return next(new ErrorResponse('Post can not be unliked.', 400));
+  }
+
+  res.json(post);
+});

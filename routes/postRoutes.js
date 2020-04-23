@@ -11,6 +11,7 @@ router.route('/by/:userId').get(authCont.protect, postCont.listPostByUser);
 router.route('/photo/:postId').get(postCont.postPhoto);
 
 router.route('/like').put(authCont.protect, postCont.likePost);
+router.route('/unlike').put(authCont.protect, postCont.unlikePost);
 
 router.param('userId', userCont.userByID);
 router.param('postId', postCont.postByID);
