@@ -131,3 +131,30 @@ exports.uncommentPost = asyncMiddleware(async (req, res, next) => {
 
   res.json(post);
 });
+
+// Remove a post
+exports.removePost = asyncMiddleware(async (req, res, next) => {
+  let post = req.post;
+
+  post.remove((err, deletedPost) => {
+    if (err || !post) {
+      return next(new ErrorResponse('Post not found', 400));
+    }
+    res.json(deletedPost);
+  });
+});
+
+// get Owner of a post
+exports.postOwner = async (req, res, next) => {
+  let postOwner =
+    req.post &&
+    req.user &&
+    req.post.postedBy._id.toString() === req.user._id.toString();
+
+  if (!postOwner) {
+    return next(
+      new ErrorResponse('User is not authorized to do this action', 403)
+    );
+  }
+  next();
+};

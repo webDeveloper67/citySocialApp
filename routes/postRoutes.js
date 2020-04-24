@@ -16,6 +16,10 @@ router.route('/unlike').put(authCont.protect, postCont.unlikePost);
 router.route('/comment').put(authCont.protect, postCont.commentPost);
 router.route('/uncomment').put(authCont.protect, postCont.uncommentPost);
 
+router
+  .route('/:postId')
+  .delete(authCont.protect, postCont.postOwner, postCont.removePost);
+
 router.param('userId', userCont.userByID);
 router.param('postId', postCont.postByID);
 
