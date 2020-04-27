@@ -9,6 +9,9 @@ import { indigo, amber } from '@material-ui/core/colors';
 // Layout
 import Navbar from './Features/Layout/Navbar';
 
+// Auth
+import Signup from './Features/Auth/Signup';
+
 // REDUX
 import { Provider } from 'react-redux';
 import store from './redux/store';
@@ -41,6 +44,9 @@ const App = () => {
       <MuiThemeProvider theme={theme}>
         <Router>
           <Navbar />
+          <Switch>
+            <Route path="/signup" component={Signup} />
+          </Switch>
         </Router>
       </MuiThemeProvider>
     </Provider>
