@@ -32,9 +32,6 @@ const theme = createMuiTheme({
     openTitle: indigo['400'],
     protectedTitle: amber['400'],
     type: 'light'
-  },
-  textDecNone: {
-    textDecoration: 'none'
   }
 });
 

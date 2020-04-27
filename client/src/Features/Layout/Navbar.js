@@ -1,12 +1,25 @@
 import React from 'react';
 import { Link, withRouter } from 'react-router-dom';
+import { makeStyles } from '@material-ui/core/styles';
 import AppBar from '@material-ui/core/AppBar';
 import Toolbar from '@material-ui/core/Toolbar';
 import Typography from '@material-ui/core/Typography';
 import IconButton from '@material-ui/core/IconButton';
 import Button from '@material-ui/core/Button';
 
+// Font Awesome
+import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
+import { faHome } from '@fortawesome/free-solid-svg-icons';
+
+const useStyles = makeStyles(theme => ({
+  styledLink: {
+    textDecoration: 'none'
+  }
+}));
+
 const Navbar = ({ history }) => {
+  const classes = useStyles();
+
   const isActive = (history, path) => {
     if (history.location.pathname === path) return { color: '#ffa726' };
     else return { color: '#ffffff' };
@@ -20,15 +33,15 @@ const Navbar = ({ history }) => {
         </Typography>
         <Link to="/">
           <IconButton aria-label="Home">
-            {/* <HomeIcon/> */}
+            <FontAwesomeIcon icon={faHome} color="yellow" />
           </IconButton>
         </Link>
 
         <span>
-          <Link to="/signup">
+          <Link to="/signup" className={classes.styledLink}>
             <Button style={isActive(history, '/signup')}>Sign up</Button>
           </Link>
-          <Link to="/signin">
+          <Link to="/signin" className={classes.styledLink}>
             <Button style={isActive(history, '/signin')}>Sign In</Button>
           </Link>
         </span>
