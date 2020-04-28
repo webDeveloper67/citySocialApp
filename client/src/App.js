@@ -1,5 +1,6 @@
 import React from 'react';
 import { BrowserRouter as Router, Route, Switch } from 'react-router-dom';
+import 'react-redux-toastr/lib/css/react-redux-toastr.min.css';
 
 // MUI
 import { ThemeProvider as MuiThemeProvider } from '@material-ui/core/styles';
@@ -44,6 +45,13 @@ const App = () => {
       <MuiThemeProvider theme={theme}>
         <Router>
           <Navbar />
+          <ReduxToastr
+            timeOut={4000}
+            position="bottom-right"
+            transitionIn="fadeIn"
+            transitionOut="fadeOut"
+            progressBar
+          />
           <Switch>
             <Route path="/signup" component={Signup} />
           </Switch>

@@ -21,7 +21,7 @@ const Navbar = ({ history }) => {
   const classes = useStyles();
 
   const isActive = (history, path) => {
-    if (history.location.pathname === path) return { color: '#ffa726' };
+    if (history.location.pathname === path) return { color: '#ffcf33' };
     else return { color: '#ffffff' };
   };
 

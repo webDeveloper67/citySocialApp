@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useState } from 'react';
 import { Link } from 'react-router-dom';
 import { makeStyles } from '@material-ui/core/styles';
 import Card from '@material-ui/core/Card';
@@ -6,41 +6,57 @@ import CardContent from '@material-ui/core/CardContent';
 import Typography from '@material-ui/core/Typography';
 import TextField from '@material-ui/core/TextField';
 import CardActions from '@material-ui/core/CardActions';
-import Dialog from '@material-ui/core/Dialog';
-import DialogContent from '@material-ui/core/DialogContent';
-import DialogContentText from '@material-ui/core/DialogContentText';
-import DialogActions from '@material-ui/core/DialogActions';
-import DialogTitle from '@material-ui/core/DialogTitle';
 import Button from '@material-ui/core/Button';
+
+// Redux
+import { connect } from 'react-redux';
+import { register } from './../../redux/action/auth';
 
 const useStyles = makeStyles(theme => ({
   card: {
     maxWidth: 600,
     margin: 'auto',
     textAlign: 'center',
-    marginTop: theme.spacing.unit * 5,
-    paddingBottom: theme.spacing.unit * 2
+    marginTop: theme.spacing(5),
+    paddingBottom: theme.spacing(2)
   },
   error: {
     verticalAlign: 'middle'
   },
   title: {
-    marginTop: theme.spacing.unit * 2,
+    marginTop: theme.spacing(2),
     color: theme.palette.openTitle
   },
   textField: {
-    marginLeft: theme.spacing.unit,
-    marginRight: theme.spacing.unit,
+    marginLeft: theme.spacing(),
+    marginRight: theme.spacing(),
     width: 300
   },
   submit: {
     margin: 'auto',
-    marginBottom: theme.spacing.unit * 2
+    marginBottom: theme.spacing(2)
   }
 }));
 
-const Signup = () => {
+const Signup = ({ register, history }) => {
   const classes = useStyles();
+
+  const [formData, setFormData] = useState({
+    name: '',
+    email: '',
+    password: ''
+  });
+
+  const { name, email, password } = formData;
+
+  const handleChange = name => e => {
+    setFormData({ ...formData, [name]: e.target.value });
+  };
+
+  const handleSubmit = e => {
+    e.preventDefault();
+    register({ name, email, password }, history);
+  };
 
   return (
     <div>
@@ -53,8 +69,8 @@ const Signup = () => {
             id="name"
             label="Name"
             className={classes.textField}
-            // value={this.state.name}
-            // onChange={this.handleChange('name')}
+            value={name}
+            onChange={handleChange('name')}
             margin="normal"
           />
           <br />
@@ -63,8 +79,8 @@ const Signup = () => {
             type="email"
             label="Email"
             className={classes.textField}
-            // value={this.state.email}
-            // onChange={this.handleChange('email')}
+            value={email}
+            onChange={handleChange('email')}
             margin="normal"
           />
           <br />
@@ -73,8 +89,8 @@ const Signup = () => {
             type="password"
             label="Password"
             className={classes.textField}
-            // value={this.state.password}
-            // onChange={this.handleChange('password')}
+            value={password}
+            onChange={handleChange('password')}
             margin="normal"
           />
           <br />
@@ -82,31 +98,16 @@ const Signup = () => {
         <CardActions>
           <Button
             color="primary"
-            variant="raised"
-            // onClick={this.clickSubmit}
+            variant="contained"
+            onClick={handleSubmit}
             className={classes.submit}
           >
             Submit
           </Button>
         </CardActions>
       </Card>
-      {/* <Dialog open={this.state.open} disableBackdropClick={true}>
-        <DialogTitle>New Account</DialogTitle>
-        <DialogContent>
-          <DialogContentText>
-            New account successfully created.
-          </DialogContentText>
-        </DialogContent>
-        <DialogActions>
-          <Link to="/signin">
-            <Button color="primary" autoFocus="autoFocus" variant="raised">
-              Sign In
-            </Button>
-          </Link>
-        </DialogActions>
-      </Dialog> */}
     </div>
   );
 };
 
-export default Signup;
+export default connect(null, { register })(Signup);

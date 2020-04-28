@@ -1,5 +1,8 @@
 import { combineReducers } from 'redux';
+import { reducer as ToastrReducer } from 'react-redux-toastr';
+import authRed from './auth';
 
 export default combineReducers({
-  replaceMe: () => 123
+  toastr: ToastrReducer,
+  auth: authRed
 });
