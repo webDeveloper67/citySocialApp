@@ -1,11 +1,51 @@
 import axios from 'axios';
+import _ from 'lodash';
 import {
   REGISTER_SUCCESS,
   REGISTER_FAIL,
   LOGIN_SUCCESS,
-  LOGIN_FAIL
+  LOGIN_FAIL,
+  LOAD_USER,
+  AUTH_ERROR
 } from './../types';
+import genAuthToken from './../../utils/genAuthToken';
 import { toastr } from 'react-redux-toastr';
+
+// Get auth user
+export const loadUser = () => async dispatch => {
+  let cookieValue = document.cookie.replace(
+    /(?:(?:^|.*;\s*)jwt=\s*\s*([^;]*).*$)|^.*$/,
+    '$1'
+  );
+  _.startsWith('jwt=', cookieValue);
+
+  _.split(cookieValue, '; ', 2);
+
+  if (cookieValue) {
+    genAuthToken(cookieValue);
+  }
+
+  const config = {
+    headers: {
+      'Content-Type': 'application/json',
+      Authorization: `Bearer ${cookieValue}`
+    },
+    withCredentials: true
+  };
+
+  try {
+    const res = await axios.get(`/api/v1/users/me`, config);
+
+    dispatch({
+      type: LOAD_USER,
+      payload: res.data // payload is user
+    });
+  } catch (error) {
+    dispatch({
+      type: AUTH_ERROR
+    });
+  }
+};
 
 // Signup a user
 export const register = (
@@ -28,7 +68,7 @@ export const register = (
     });
     toastr.success('Success', 'successfully signed up.');
     history.push('/');
-    // dispatch(loadUser());
+    dispatch(loadUser());
   } catch (error) {
     let registerErr = error.response.data;
 
@@ -66,7 +106,7 @@ export const login = ({ email, password }, history) => async dispatch => {
     });
     toastr.success('Success', 'successfully signed in.');
     history.push('/');
-    // dispatch(loadUser());
+    dispatch(loadUser());
   } catch (error) {
     let loginErr = error.response.data.message;
 

@@ -16,3 +16,15 @@ exports.userByID = async (req, res, next, id) => {
       next();
     });
 };
+
+// setting userId from protect Middleware
+exports.getMe = (req, res, next) => {
+  req.profile = req.user;
+
+  next();
+};
+
+// Get auth user
+exports.getAuthUser = (req, res, next) => {
+  return res.json(req.profile);
+};

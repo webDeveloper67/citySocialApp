@@ -1,6 +1,8 @@
-import React from 'react';
+import React, { useEffect } from 'react';
 import { BrowserRouter as Router, Route, Switch } from 'react-router-dom';
+import _ from 'lodash';
 import 'react-redux-toastr/lib/css/react-redux-toastr.min.css';
+import genAuthToken from './utils/genAuthToken';
 
 // MUI
 import { ThemeProvider as MuiThemeProvider } from '@material-ui/core/styles';
@@ -18,6 +20,7 @@ import Signin from './Features/Auth/Signin';
 import { Provider } from 'react-redux';
 import store from './redux/store';
 import ReduxToastr from 'react-redux-toastr';
+import { loadUser } from './redux/action/auth';
 
 // Color Palette
 const theme = createMuiTheme({
@@ -40,7 +43,21 @@ const theme = createMuiTheme({
   }
 });
 
+// set default Header
+let cookieValue = document.cookie.replace(
+  /(?:(?:^|.*;\s*)jwt=\s*\s*([^;]*).*$)|^.*$/,
+  '$1'
+);
+_.startsWith('jwt=', cookieValue);
+_.split(cookieValue, '; ', 2);
+if (cookieValue) {
+  genAuthToken(cookieValue);
+}
+
 const App = () => {
+  useEffect(() => {
+    store.dispatch(loadUser());
+  });
   return (
     <Provider store={store}>
       <MuiThemeProvider theme={theme}>
