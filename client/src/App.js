@@ -12,6 +12,7 @@ import Navbar from './Features/Layout/Navbar';
 
 // Auth
 import Signup from './Features/Auth/Signup';
+import Signin from './Features/Auth/Signin';
 
 // REDUX
 import { Provider } from 'react-redux';
@@ -54,6 +55,7 @@ const App = () => {
           />
           <Switch>
             <Route path="/signup" component={Signup} />
+            <Route path="/signin" component={Signin} />
           </Switch>
         </Router>
       </MuiThemeProvider>

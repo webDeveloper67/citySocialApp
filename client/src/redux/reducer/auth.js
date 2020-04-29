@@ -1,4 +1,4 @@
-import { REGISTER_SUCCESS } from './../types';
+import { REGISTER_SUCCESS, LOGIN_SUCCESS } from './../types';
 
 const initialState = {
   user: null,
@@ -14,6 +14,7 @@ export default function(state = initialState, action) {
 
   switch (type) {
     case REGISTER_SUCCESS:
+    case LOGIN_SUCCESS:
       document.cookie = payload.token;
       return {
         ...state,
