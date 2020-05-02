@@ -1,5 +1,8 @@
+const path = require('path');
 const ErrorResponse = require('./../helpers/ErrorResponse');
 const asyncMiddleware = require('./../helpers/asyncMiddleware');
+const userImg = './public/img/no-image.png';
+const resolvedImg = path.resolve(userImg);
 const User = require('./../models/UserModel');
 
 // Find a user by ID
@@ -39,3 +42,17 @@ exports.listUsers = asyncMiddleware(async (req, res, next) => {
 
   res.json(users);
 });
+
+// Get photo of a user
+exports.userPhoto = (req, res, next) => {
+  if (req.profile.photo.data) {
+    res.set('Content-Type', req.profile.photo.contentType);
+    return res.send(req.profile.photo.data);
+  }
+  next();
+};
+
+// default photo for user
+exports.defaultPhoto = (req, res) => {
+  return res.sendFile(resolvedImg);
+};

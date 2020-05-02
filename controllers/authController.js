@@ -1,4 +1,6 @@
+const fs = require('fs');
 const jwt = require('jsonwebtoken');
+const formidable = require('formidable');
 const asyncMiddleware = require('./../helpers/asyncMiddleware');
 const User = require('./../models/UserModel');
 const ErrorResponse = require('./../helpers/ErrorResponse');
@@ -54,15 +56,28 @@ exports.protect = asyncMiddleware(async (req, res, next) => {
 
 // Sign Up a user
 exports.signup = asyncMiddleware(async (req, res, next) => {
-  const { name, email, password } = req.body;
+  let form = new formidable.IncomingForm();
+  form.keepExtensions = true;
 
-  const user = await User.create({
-    name,
-    email,
-    password
+  form.parse(req, (err, fields, files) => {
+    if (err) {
+      return next(new ErrorResponse('Image could not be uploaded.', 401));
+    }
+
+    let user = new User(fields);
+
+    if (files.photo) {
+      user.photo.data = fs.readFileSync(files.photo.path);
+      user.photo.contentType = files.photo.type;
+    }
+
+    user.save((err, result) => {
+      if (err) {
+        return next(new ErrorResponse(err, 400));
+      }
+      sendTokenResponse(result, 200, res);
+    });
   });
-
-  sendTokenResponse(user, 200, res);
 });
 
 // Login a user
