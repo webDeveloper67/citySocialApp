@@ -28,3 +28,14 @@ exports.getMe = (req, res, next) => {
 exports.getAuthUser = (req, res, next) => {
   return res.json(req.profile);
 };
+
+// List all users
+exports.listUsers = asyncMiddleware(async (req, res, next) => {
+  const users = await User.find().select('name email updated created');
+
+  if (!users) {
+    return next(new ErrorResponse('User not found!', 400));
+  }
+
+  res.json(users);
+});
