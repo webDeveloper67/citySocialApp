@@ -69,13 +69,17 @@ exports.signup = asyncMiddleware(async (req, res, next) => {
     if (files.photo) {
       user.photo.data = fs.readFileSync(files.photo.path);
       user.photo.contentType = files.photo.type;
-    }
 
+      console.log(user, 'user in if statement ☺️');
+    }
+    user.photo = req.profile.photo;
     user.save((err, result) => {
       if (err) {
         return next(new ErrorResponse(err, 400));
       }
+
       sendTokenResponse(result, 200, res);
+      console.log(result, 'result in save methodddd ☺️');
     });
   });
 });

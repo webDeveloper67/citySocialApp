@@ -8,10 +8,10 @@ router.post('/login', authCont.loginUser);
 
 router.route('/').get(userCont.listUsers);
 
+router.get('/me', authCont.protect, userCont.getMe, userCont.getAuthUser);
+
 router.route('/photo/:userId').get(userCont.userPhoto, userCont.defaultPhoto);
 router.route('/defaultphoto').get(userCont.defaultPhoto);
-
-router.get('/me', authCont.protect, userCont.getMe, userCont.getAuthUser);
 
 router.param('userID', userCont.userByID);
 

@@ -14,8 +14,8 @@ exports.userByID = async (req, res, next, id) => {
       if (err || !user) {
         return next(new ErrorResponse(`User not found!`, 400));
       }
-
       req.profile = user;
+      console.log(req.profile, '🥺');
       next();
     });
 };
@@ -32,6 +32,16 @@ exports.getAuthUser = (req, res, next) => {
   return res.json(req.profile);
 };
 
+// Get photo of a user
+exports.userPhoto = (req, res, next) => {
+  console.log(req.profile, '😍');
+  if (req.profile.photo.data) {
+    res.set('Content-Type', req.profile.photo.contentType);
+    return res.send(req.profile.photo.data);
+  }
+  next();
+};
+
 // List all users
 exports.listUsers = asyncMiddleware(async (req, res, next) => {
   const users = await User.find().select('name email updated created');
@@ -42,15 +52,6 @@ exports.listUsers = asyncMiddleware(async (req, res, next) => {
 
   res.json(users);
 });
-
-// Get photo of a user
-exports.userPhoto = (req, res, next) => {
-  if (req.profile.photo.data) {
-    res.set('Content-Type', req.profile.photo.contentType);
-    return res.send(req.profile.photo.data);
-  }
-  next();
-};
 
 // default photo for user
 exports.defaultPhoto = (req, res) => {
