@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useState, useEffect, useCallback } from 'react';
 import { Link } from 'react-router-dom';
 import { makeStyles } from '@material-ui/core/styles';
 import Grid from '@material-ui/core/Grid';
@@ -13,6 +13,9 @@ import { faQuoteRight, faQuoteLeft } from '@fortawesome/free-solid-svg-icons';
 // Redux
 import { connect } from 'react-redux';
 import { logout } from './../../redux/action/auth';
+
+// Components
+import SocialFeed from './../Post/SocialFeed';
 
 const useStyles = makeStyles(theme => ({
   root: {
@@ -46,6 +49,31 @@ const Header = ({ auth, history, logout }) => {
   const classes = useStyles();
 
   const { isAuthenticated } = auth;
+
+  const [guestPage, setGuestPage] = useState(true);
+
+  // useCallback(
+  //   () => {
+  //     if (isAuthenticated) {
+  //       setGuestPage(false);
+  //     } else {
+  //       setGuestPage(true);
+  //     }
+  //   },
+  //   [isAuthenticated]
+  // );
+
+  useEffect(
+    () => {
+      if (isAuthenticated) {
+        setGuestPage(false);
+      } else {
+        setGuestPage(true);
+      }
+    },
+    [isAuthenticated]
+  );
+
   return (
     <Grid container component="main" className={classes.root}>
       <Grid item xs={false} sm={4} md={7} className={classes.hero} />
@@ -119,6 +147,16 @@ const Header = ({ auth, history, logout }) => {
           </Container>
         </div>
       </Grid>
+
+      {!guestPage &&
+        <Grid container spacing={10}>
+          <Grid item xs={8} sm={7}>
+            <SocialFeed />
+          </Grid>
+          {/* <Grid item xs={6} sm={5}>
+              <FindPeople/>
+            </Grid> */}
+        </Grid>}
     </Grid>
   );
 };
