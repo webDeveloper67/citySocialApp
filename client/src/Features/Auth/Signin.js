@@ -45,6 +45,8 @@ const Signin = ({ login, history }) => {
     password: ''
   });
 
+  const [disable, setDisable] = useState(false);
+
   const { email, password } = formData;
 
   const handleChange = name => e => {
@@ -52,6 +54,10 @@ const Signin = ({ login, history }) => {
   };
 
   const handleSubmit = e => {
+    if (disable) {
+      return;
+    }
+    setDisable(true);
     e.preventDefault();
     login({ email, password }, history);
   };
@@ -89,8 +95,9 @@ const Signin = ({ login, history }) => {
           variant="contained"
           onClick={handleSubmit}
           className={classes.submit}
+          disabled={disable}
         >
-          Submit
+          {disable ? 'Submitting' : 'Submit'}
         </Button>
       </CardActions>
     </Card>

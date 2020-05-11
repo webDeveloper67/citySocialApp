@@ -28,7 +28,6 @@ const userSchema = new Schema({
   },
   about: {
     type: String,
-    required: [true, 'Tell us about yourserlf a little bit'],
     trim: true
   },
   photo: {

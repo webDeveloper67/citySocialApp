@@ -34,8 +34,6 @@ exports.getAuthUser = (req, res, next) => {
 
 // Get photo of a user
 exports.userPhoto = (req, res, next) => {
-  console.log(req.profile, '😍');
-  console.log(req.url, '🤯');
   if (req.profile.photo.data) {
     res.set('Content-Type', req.profile.photo.contentType);
     return res.send(req.profile.photo.data);

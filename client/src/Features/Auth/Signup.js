@@ -46,6 +46,8 @@ const Signup = ({ register, history }) => {
     password: ''
   });
 
+  const [disable, setDisable] = useState(false);
+
   const { name, email, password } = formData;
 
   const handleChange = name => e => {
@@ -53,6 +55,10 @@ const Signup = ({ register, history }) => {
   };
 
   const handleSubmit = e => {
+    if (disable) {
+      return;
+    }
+    setDisable(true);
     e.preventDefault();
     register({ name, email, password }, history);
   };
@@ -100,8 +106,9 @@ const Signup = ({ register, history }) => {
             variant="contained"
             onClick={handleSubmit}
             className={classes.submit}
+            disabled={disable}
           >
-            Submit
+            {disable ? 'Submitting' : 'Submit'}
           </Button>
         </CardActions>
       </Card>

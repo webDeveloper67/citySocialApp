@@ -56,32 +56,39 @@ exports.protect = asyncMiddleware(async (req, res, next) => {
 
 // Sign Up a user
 exports.signup = asyncMiddleware(async (req, res, next) => {
-  let form = new formidable.IncomingForm();
-  form.keepExtensions = true;
+  const { name, email, password } = req.body;
 
-  form.parse(req, (err, fields, files) => {
-    if (err) {
-      return next(new ErrorResponse('Image could not be uploaded.', 401));
-    }
-
-    let user = new User(fields);
-
-    if (files.photo) {
-      user.photo.data = fs.readFileSync(files.photo.path);
-      user.photo.contentType = files.photo.type;
-
-      console.log(user, 'user in if statement ☺️');
-    }
-    user.photo = req.profile.photo;
-    user.save((err, result) => {
-      if (err) {
-        return next(new ErrorResponse(err, 400));
-      }
-
-      sendTokenResponse(result, 200, res);
-      console.log(result, 'result in save methodddd ☺️');
-    });
+  const user = await User.create({
+    name,
+    email,
+    password
   });
+
+  sendTokenResponse(user, 200, res);
+  // let form = new formidable.IncomingForm();
+  // form.keepExtensions = true;
+
+  // form.parse(req, (err, fields, files) => {
+  //   if (err) {
+  //     return next(new ErrorResponse('Image could not be uploaded.', 401));
+  //   }
+
+  //   let user = new User(fields);
+
+  //   if (files.photo) {
+  //     user.photo.data = fs.readFileSync(files.photo.path);
+  //     user.photo.contentType = files.photo.type;
+  //   }
+
+  //   user.save((err, result) => {
+  //     console.log(result, '🚗');
+  //     if (err) {
+  //       return next(new ErrorResponse(err, 400));
+  //     }
+
+  //     sendTokenResponse(result, 200, res);
+  //   });
+  // });
 });
 
 // Login a user
