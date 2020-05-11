@@ -9,8 +9,14 @@ import { ThemeProvider as MuiThemeProvider } from '@material-ui/core/styles';
 import createMuiTheme from '@material-ui/core/styles/createMuiTheme';
 import { indigo, amber } from '@material-ui/core/colors';
 
+// Custom CSS
+import './App.css';
+
 // Layout
 import Navbar from './Features/Layout/Navbar';
+
+// Header
+import Header from './Features/Header/Header';
 
 // Auth
 import Signup from './Features/Auth/Signup';
@@ -63,6 +69,7 @@ const App = () => {
       <MuiThemeProvider theme={theme}>
         <Router>
           <Navbar />
+          <Route exact path="/" component={Header} />
           <ReduxToastr
             timeOut={4000}
             position="bottom-right"
