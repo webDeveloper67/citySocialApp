@@ -6,7 +6,8 @@ import {
   LOGIN_SUCCESS,
   LOGIN_FAIL,
   LOAD_USER,
-  AUTH_ERROR
+  AUTH_ERROR,
+  LOGOUT
 } from './../types';
 import genAuthToken from './../../utils/genAuthToken';
 import { toastr } from 'react-redux-toastr';
@@ -115,4 +116,13 @@ export const login = ({ email, password }, history) => async dispatch => {
     });
     toastr.error(loginErr);
   }
+};
+
+// Sign out of app
+export const logout = history => dispatch => {
+  dispatch({
+    type: LOGOUT
+  });
+  toastr.info('Success', 'successfully signed Out.');
+  history.push('/');
 };

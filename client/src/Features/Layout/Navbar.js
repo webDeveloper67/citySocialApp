@@ -11,14 +11,21 @@ import Button from '@material-ui/core/Button';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faHome } from '@fortawesome/free-solid-svg-icons';
 
+// Redux
+import { compose } from 'redux';
+import { connect } from 'react-redux';
+import { logout } from './../../redux/action/auth';
+
 const useStyles = makeStyles(theme => ({
   styledLink: {
     textDecoration: 'none'
   }
 }));
 
-const Navbar = ({ history }) => {
+const Navbar = ({ history, auth, logout }) => {
   const classes = useStyles();
+
+  const { isAuthenticated, user } = auth;
 
   const isActive = (history, path) => {
     if (history.location.pathname === path) return { color: '#ffcf33' };
@@ -36,29 +43,36 @@ const Navbar = ({ history }) => {
             <FontAwesomeIcon icon={faHome} color="yellow" />
           </IconButton>
         </Link>
+        {!isAuthenticated &&
+          !user &&
+          <span>
+            <Link to="/signup" className={classes.styledLink}>
+              <Button style={isActive(history, '/signup')}>Sign up</Button>
+            </Link>
+            <Link to="/signin" className={classes.styledLink}>
+              <Button style={isActive(history, '/signin')}>Sign In</Button>
+            </Link>
+          </span>}
 
-        <span>
-          <Link to="/signup" className={classes.styledLink}>
-            <Button style={isActive(history, '/signup')}>Sign up</Button>
-          </Link>
-          <Link to="/signin" className={classes.styledLink}>
-            <Button style={isActive(history, '/signin')}>Sign In</Button>
-          </Link>
-        </span>
-
-        {/* {
-        auth.isAuthenticated() && (<span>
-          <Link to={"/user/" + auth.isAuthenticated().user._id}>
-            <Button style={isActive(history, "/user/" + auth.isAuthenticated().user._id)}>My Profile</Button>
-          </Link>
-          <Button color="inherit" onClick={() => {
-              auth.signout(() => history.push('/'))
-            }}>Sign out</Button>
-        </span>)
-      } */}
+        {isAuthenticated &&
+          user &&
+          <span>
+            <Link to={'/user/' + auth.user._id} className={classes.styledLink}>
+              <Button style={isActive(history, '/user/' + auth.user._id)}>
+                My Profile
+              </Button>
+            </Link>
+            <Button color="inherit" onClick={() => logout(history)}>
+              Sign out
+            </Button>
+          </span>}
       </Toolbar>
     </AppBar>
   );
 };
 
-export default withRouter(Navbar);
+const mapState = state => ({
+  auth: state.auth
+});
+
+export default compose(withRouter, connect(mapState, { logout }))(Navbar);

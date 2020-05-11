@@ -1,4 +1,5 @@
 import React from 'react';
+import { Link } from 'react-router-dom';
 import { makeStyles } from '@material-ui/core/styles';
 import Grid from '@material-ui/core/Grid';
 import Container from '@material-ui/core/Container';
@@ -8,6 +9,11 @@ import Typography from '@material-ui/core/Typography';
 // FontAwesome
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faQuoteRight, faQuoteLeft } from '@fortawesome/free-solid-svg-icons';
+
+// Redux
+import { connect } from 'react-redux';
+import { logout } from './../../redux/action/auth';
+
 const useStyles = makeStyles(theme => ({
   root: {
     height: '90vh',
@@ -30,12 +36,16 @@ const useStyles = makeStyles(theme => ({
   heroContent: {
     backgroundColor: theme.palette.background.paper,
     padding: theme.spacing(8, 0, 6)
+  },
+  styledLink: {
+    textDecoration: 'none'
   }
 }));
 
-const Header = () => {
+const Header = ({ auth, history, logout }) => {
   const classes = useStyles();
 
+  const { isAuthenticated } = auth;
   return (
     <Grid container component="main" className={classes.root}>
       <Grid item xs={false} sm={4} md={7} className={classes.hero} />
@@ -70,18 +80,41 @@ const Header = () => {
               ~ Ray Allen, former American professional basketball players
             </Typography>
             <div className={classes.heroButtons}>
-              <Grid container spacing={2} justify="center">
-                <Grid item>
-                  <Button variant="contained" color="primary">
-                    Sign Up
-                  </Button>
-                </Grid>
-                <Grid item>
-                  <Button variant="outlined" color="primary">
-                    Sign In
-                  </Button>
-                </Grid>
-              </Grid>
+              {!isAuthenticated &&
+                <Grid container spacing={2} justify="center">
+                  <Grid item>
+                    <Link to="/signup" className={classes.styledLink}>
+                      <Button variant="contained" color="primary">
+                        Sign Up
+                      </Button>
+                    </Link>
+                  </Grid>
+                  <Grid item>
+                    <Link to="/signin" className={classes.styledLink}>
+                      <Button variant="outlined" color="primary">
+                        Sign In
+                      </Button>
+                    </Link>
+                  </Grid>
+                </Grid>}
+
+              {isAuthenticated &&
+                <Grid container spacing={2} justify="center">
+                  <Grid item>
+                    <Button
+                      variant="contained"
+                      color="primary"
+                      onClick={() => logout(history)}
+                    >
+                      Sign Out
+                    </Button>
+                  </Grid>
+                  <Grid item>
+                    <Button variant="outlined" color="primary">
+                      My Profile
+                    </Button>
+                  </Grid>
+                </Grid>}
             </div>
           </Container>
         </div>
@@ -90,4 +123,8 @@ const Header = () => {
   );
 };
 
-export default Header;
+const mapState = state => ({
+  auth: state.auth
+});
+
+export default connect(mapState, { logout })(Header);

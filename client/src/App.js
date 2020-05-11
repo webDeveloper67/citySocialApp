@@ -63,7 +63,7 @@ if (cookieValue) {
 const App = () => {
   useEffect(() => {
     store.dispatch(loadUser());
-  });
+  }, []);
   return (
     <Provider store={store}>
       <MuiThemeProvider theme={theme}>

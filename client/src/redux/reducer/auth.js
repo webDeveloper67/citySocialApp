@@ -1,4 +1,4 @@
-import { REGISTER_SUCCESS, LOGIN_SUCCESS, LOAD_USER } from './../types';
+import { REGISTER_SUCCESS, LOGIN_SUCCESS, LOAD_USER, LOGOUT } from './../types';
 
 const initialState = {
   user: null,
@@ -26,6 +26,15 @@ export default function(state = initialState, action) {
         ...state,
         isAuthenticated: true,
         user: payload
+      };
+    case LOGOUT:
+      document.cookie =
+        'jwt=; expires=Thu, 01 Jan 1970 00:00:00 GMT; path=/; domain=127.0.0.1';
+      return {
+        ...state,
+        token: null,
+        isAuthenticated: false,
+        user: null
       };
     default:
       return state;
