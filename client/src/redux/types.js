@@ -8,3 +8,5 @@ export const LOAD_USER = 'LOAD_USER';
 export const AUTH_ERROR = 'AUTH_ERROR';
 
 export const LOGOUT = 'LOGOUT';
+
+export const LIST_SOCIAL_FEEDS = 'LIST_SOCIAL_FEEDS';

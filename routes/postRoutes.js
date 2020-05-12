@@ -8,6 +8,8 @@ router.route('/new/:userId').post(authCont.protect, postCont.createPost);
 
 router.route('/by/:userId').get(authCont.protect, postCont.listPostByUser);
 
+router.route('/feed/:userId').get(authCont.protect, postCont.listSocialFeed);
+
 router.route('/photo/:postId').get(postCont.postPhoto);
 
 router.route('/like').put(authCont.protect, postCont.likePost);

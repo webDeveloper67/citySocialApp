@@ -22,11 +22,18 @@ import Header from './Features/Header/Header';
 import Signup from './Features/Auth/Signup';
 import Signin from './Features/Auth/Signin';
 
+// Profile
+import UserProfile from './Features/Profile/UserProfile';
+import EditUserProfile from './Features/Profile/EditUserProfile';
+
 // REDUX
 import { Provider } from 'react-redux';
 import store from './redux/store';
 import ReduxToastr from 'react-redux-toastr';
 import { loadUser } from './redux/action/auth';
+
+// Utils
+import PrivateRoute from './utils/PrivateRoute';
 
 // Color Palette
 const theme = createMuiTheme({
@@ -80,6 +87,8 @@ const App = () => {
           <Switch>
             <Route path="/signup" component={Signup} />
             <Route path="/signin" component={Signin} />
+            <Route path="/user/:userId" component={UserProfile} />
+            <Route path="/user/edit/:userId" component={EditUserProfile} />
           </Switch>
         </Router>
       </MuiThemeProvider>

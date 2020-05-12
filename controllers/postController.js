@@ -158,3 +158,22 @@ exports.postOwner = async (req, res, next) => {
   }
   next();
 };
+
+// Get Social Feeds
+exports.listSocialFeed = asyncMiddleware(async (req, res, next) => {
+  let following = req.user.following;
+
+  following.push(req.user._id);
+
+  const posts = await Post.find({ postedBy: { $in: req.user.following } })
+    .populate('comments', 'text created')
+    .populate('comments.postedBy', '_id name')
+    .populate('postedBy', '_id name')
+    .sort('-created');
+
+  if (!posts) {
+    return next(new ErrorResponse('Posts not found', 400));
+  }
+
+  res.json(posts);
+});
