@@ -12,7 +12,10 @@ router.get('/me', authCont.protect, userCont.getMe, userCont.getAuthUser);
 
 router.route('/defaultphoto').get(userCont.defaultPhoto);
 router.route('/photo/:userId').get(userCont.userPhoto, userCont.defaultPhoto);
-router.route('/:userId').get(authCont.protect, userCont.readUser);
+router
+  .route('/:userId')
+  .get(authCont.protect, userCont.readUser)
+  .put(authCont.protect, userCont.updateUser);
 
 router.param('userId', userCont.userByID);
 

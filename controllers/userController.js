@@ -1,4 +1,7 @@
 const path = require('path');
+const fs = require('fs');
+const formidable = require('formidable');
+const _ = require('lodash');
 const ErrorResponse = require('./../helpers/ErrorResponse');
 const asyncMiddleware = require('./../helpers/asyncMiddleware');
 const userImg = './public/img/no-image.png';
@@ -60,3 +63,31 @@ exports.defaultPhoto = (req, res) => {
 exports.readUser = (req, res, next) => {
   return res.json(req.user);
 };
+
+// Update User
+exports.updateUser = asyncMiddleware(async (req, res, next) => {
+  let form = new formidable.IncomingForm();
+  form.keepExtensions = true;
+
+  form.parse(req, (err, fields, files) => {
+    if (err) {
+      return next(new ErrorResponse('Photo can not be updated', 400));
+    }
+    let user = req.user;
+    user = _.extend(user, fields);
+    user.updated = Date.now();
+
+    if (files.photo) {
+      user.photo.data = fs.readFileSync(files.photo.path);
+      user.photo.contentType = files.photo.type;
+    }
+
+    user.save((err, result) => {
+      if (err) {
+        return next(new ErrorResponse('User profile can not be updated!', 400));
+      }
+
+      res.json(user);
+    });
+  });
+});

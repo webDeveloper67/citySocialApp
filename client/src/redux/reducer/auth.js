@@ -1,4 +1,10 @@
-import { REGISTER_SUCCESS, LOGIN_SUCCESS, LOAD_USER, LOGOUT } from './../types';
+import {
+  REGISTER_SUCCESS,
+  LOGIN_SUCCESS,
+  LOAD_USER,
+  LOGOUT,
+  UPDATE_USER
+} from './../types';
 
 const initialState = {
   user: null,
@@ -22,6 +28,7 @@ export default function(state = initialState, action) {
         isAuthenticated: true
       };
     case LOAD_USER:
+    case UPDATE_USER:
       return {
         ...state,
         isAuthenticated: true,

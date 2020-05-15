@@ -10,3 +10,6 @@ export const AUTH_ERROR = 'AUTH_ERROR';
 export const LOGOUT = 'LOGOUT';
 
 export const LIST_SOCIAL_FEEDS = 'LIST_SOCIAL_FEEDS';
+
+export const READ_USER = 'READ_USER';
+export const UPDATE_USER = 'UPDATE_USER';
