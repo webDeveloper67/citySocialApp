@@ -85,10 +85,14 @@ const App = () => {
             progressBar
           />
           <Switch>
-            <Route path="/signup" component={Signup} />
-            <Route path="/signin" component={Signin} />
-            <Route path="/user/:userId" component={UserProfile} />
-            <Route path="/user/edit/:userId" component={EditUserProfile} />
+            <Route exact path="/signup" component={Signup} />
+            <Route exact path="/signin" component={Signin} />
+            <Route exact path="/user/:userId" component={UserProfile} />
+            <PrivateRoute
+              exact
+              path="/user/edit/:userId"
+              component={EditUserProfile}
+            />
           </Switch>
         </Router>
       </MuiThemeProvider>

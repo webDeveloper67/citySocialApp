@@ -10,7 +10,7 @@ const PrivateRoute = ({
   <Route
     {...rest}
     render={props =>
-      !isAuthenticated ? <Redirect to="/signin" /> : <Component {...props} />}
+      isAuthenticated ? <Component {...props} /> : <Redirect to="/signin" />}
   />;
 
 const mapState = state => {

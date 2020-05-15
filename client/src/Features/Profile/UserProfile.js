@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { Fragment } from 'react';
 import { Link } from 'react-router-dom';
 import { makeStyles } from '@material-ui/core/styles';
 import Paper from '@material-ui/core/Paper';
@@ -43,7 +43,25 @@ const UserProfile = ({ auth, match }) => {
 
   const { user } = auth;
 
-  console.log(match.params.userId);
+  // const getKeyByValue = (object, value) => {
+  //   if (user) {
+  //     for (var prop in user) {
+  //       if (object.hasOwnProperty(prop)) {
+  //         if (user[prop] === value) return user[prop];
+  //       }
+  //     }
+  //   }
+  // };
+
+  // let ans;
+  // if (user) {
+  //   ans = getKeyByValue(user, user._id);
+  //   console.log(ans);
+  // }
+
+  if (user) {
+    console.log(user._id);
+  }
 
   const photoUrl =
     user && user._id

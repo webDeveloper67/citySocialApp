@@ -55,3 +55,8 @@ exports.listUsers = asyncMiddleware(async (req, res, next) => {
 exports.defaultPhoto = (req, res) => {
   return res.sendFile(resolvedImg);
 };
+
+// Read Auth user
+exports.readUser = (req, res, next) => {
+  return res.json(req.user);
+};
