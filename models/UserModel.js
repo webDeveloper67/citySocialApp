@@ -34,6 +34,11 @@ const userSchema = new Schema({
     data: Buffer,
     contentType: String
   },
+  active: {
+    type: Boolean,
+    default: true,
+    select: false
+  },
   following: [{ type: mongoose.Schema.ObjectId, ref: 'User' }],
   followers: [{ type: mongoose.Schema.ObjectId, ref: 'User' }]
 });
@@ -51,6 +56,12 @@ userSchema.pre('save', async function(next) {
 userSchema.methods.comparePassword = async function(candidatePass, userPass) {
   return await bcrypt.compare(candidatePass, userPass);
 };
+
+userSchema.pre(/^find/, function(next) {
+  this.find({ active: { $ne: false } });
+
+  next();
+});
 
 const User = mongoose.model('User', userSchema, 'users');
 

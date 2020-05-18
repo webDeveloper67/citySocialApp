@@ -91,3 +91,15 @@ exports.updateUser = asyncMiddleware(async (req, res, next) => {
     });
   });
 });
+
+// Remove or delete User
+exports.deleteUser = asyncMiddleware(async (req, res, next) => {
+  let user = req.profile;
+
+  await User.findByIdAndUpdate(user, { active: false });
+
+  res.status(204).json({
+    status: 'success',
+    data: null
+  });
+});

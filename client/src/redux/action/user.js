@@ -1,6 +1,7 @@
 import axios from 'axios';
-import { READ_USER, UPDATE_USER } from './../types';
+import { READ_USER, UPDATE_USER, DELETE_USER } from './../types';
 
+// Load auth user
 export const readUser = userId => async dispatch => {
   try {
     const res = await axios.get(`/api/v1/users/${userId}`);
@@ -14,6 +15,7 @@ export const readUser = userId => async dispatch => {
   }
 };
 
+// Update user Profile
 export const updateUser = (userId, userInfo) => async dispatch => {
   const config = {
     headers: {
@@ -31,5 +33,18 @@ export const updateUser = (userId, userInfo) => async dispatch => {
     });
   } catch (error) {
     console.log(error, 'error occurred in updateUser action 😃');
+  }
+};
+
+// Remove User
+export const deleteUser = userId => async dispatch => {
+  try {
+    await axios.delete(`/api/v1/users/${userId}`);
+
+    dispatch({
+      type: DELETE_USER
+    });
+  } catch (error) {
+    console.log(error, 'error if it can not delete user');
   }
 };

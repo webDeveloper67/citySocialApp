@@ -3,7 +3,8 @@ import {
   LOGIN_SUCCESS,
   LOAD_USER,
   LOGOUT,
-  UPDATE_USER
+  UPDATE_USER,
+  DELETE_USER
 } from './../types';
 
 const initialState = {
@@ -35,6 +36,7 @@ export default function(state = initialState, action) {
         user: payload
       };
     case LOGOUT:
+    case DELETE_USER:
       document.cookie =
         'jwt=; expires=Thu, 01 Jan 1970 00:00:00 GMT; path=/; domain=127.0.0.1';
       return {

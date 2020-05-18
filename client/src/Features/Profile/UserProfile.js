@@ -11,10 +11,11 @@ import ListItemText from '@material-ui/core/ListItemText';
 import ListItemSecondaryAction from '@material-ui/core/ListItemSecondaryAction';
 import IconButton from '@material-ui/core/IconButton';
 import Divider from '@material-ui/core/Divider';
+import DeleteUser from './DeleteUser';
 
 // Font Awesome
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
-import { faEdit, faTrash } from '@fortawesome/free-solid-svg-icons';
+import { faEdit } from '@fortawesome/free-solid-svg-icons';
 
 // Redux
 import { connect } from 'react-redux';
@@ -67,9 +68,7 @@ const UserProfile = ({ auth, match }) => {
                     <FontAwesomeIcon icon={faEdit} />
                   </IconButton>
                 </Link>
-                <IconButton>
-                  <FontAwesomeIcon icon={faTrash} />
-                </IconButton>
+                <DeleteUser userId={user._id} />
               </ListItemSecondaryAction>
             : <h6>follow profile button</h6>
           // (<FollowProfileButton following={this.state.following} onButtonClick={this.clickFollowButton}/>)

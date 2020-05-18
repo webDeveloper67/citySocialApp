@@ -15,7 +15,8 @@ router.route('/photo/:userId').get(userCont.userPhoto, userCont.defaultPhoto);
 router
   .route('/:userId')
   .get(authCont.protect, userCont.readUser)
-  .put(authCont.protect, userCont.updateUser);
+  .put(authCont.protect, userCont.updateUser)
+  .delete(authCont.protect, userCont.deleteUser);
 
 router.param('userId', userCont.userByID);
 
