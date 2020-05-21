@@ -14,3 +14,6 @@ export const LIST_SOCIAL_FEEDS = 'LIST_SOCIAL_FEEDS';
 export const READ_USER = 'READ_USER';
 export const UPDATE_USER = 'UPDATE_USER';
 export const DELETE_USER = 'DELETE_USER';
+
+export const CREATE_POST = 'CREATE_POST';
+export const ADD_POST = 'ADD_POST';

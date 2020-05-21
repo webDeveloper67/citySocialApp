@@ -1,7 +1,8 @@
-import { LIST_SOCIAL_FEEDS } from './../types';
+import { LIST_SOCIAL_FEEDS, CREATE_POST, ADD_POST } from './../types';
 
 const initialState = {
-  posts: []
+  posts: [],
+  post: null
 };
 
 export default function(state = initialState, action) {
@@ -11,6 +12,18 @@ export default function(state = initialState, action) {
     case LIST_SOCIAL_FEEDS:
       return {
         posts: payload
+      };
+    case CREATE_POST:
+      return {
+        ...state,
+        post: payload
+      };
+    case ADD_POST:
+      console.log(payload, 'payload for ADD_POST');
+
+      return {
+        ...state,
+        posts: [...state.posts, payload]
       };
     default:
       return state;

@@ -12,6 +12,8 @@ import ListItemSecondaryAction from '@material-ui/core/ListItemSecondaryAction';
 import IconButton from '@material-ui/core/IconButton';
 import Divider from '@material-ui/core/Divider';
 import DeleteUser from './DeleteUser';
+import FollowProfileButton from './FollowProfileButton';
+import ProfileTabs from './ProfileTabs';
 
 // Font Awesome
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
@@ -61,7 +63,7 @@ const UserProfile = ({ auth, match }) => {
           {user &&
             user._id &&
             <ListItemText primary={user.name} secondary={user.email} />}
-          {user && user._id
+          {user && user._id && user.following
             ? <ListItemSecondaryAction>
                 <Link to={`/user/edit/${user._id}`}>
                   <IconButton aria-label="Edit" color="primary">
@@ -70,9 +72,7 @@ const UserProfile = ({ auth, match }) => {
                 </Link>
                 <DeleteUser userId={user._id} />
               </ListItemSecondaryAction>
-            : <h6>follow profile button</h6>
-          // (<FollowProfileButton following={this.state.following} onButtonClick={this.clickFollowButton}/>)
-          }
+            : <FollowProfileButton />}
         </ListItem>
         <Divider />
         {user &&
@@ -84,7 +84,7 @@ const UserProfile = ({ auth, match }) => {
             />
           </ListItem>}
       </List>
-      {/* <ProfileTabs user={this.state.user} posts={this.state.posts} removePostUpdate={this.removePost}/> */}
+      <ProfileTabs />
     </Paper>
   );
 };

@@ -53,24 +53,29 @@ const PostItem = ({ post, auth }) => {
 
   const { user } = auth;
 
+  const { postedBy } = post;
+  console.log(postedBy, '😟😟😟😟');
+
   return (
     <Card className={classes.card}>
-      <CardHeader
-        avatar={<Avatar src={`/api/v1/users/photo/${post.postedBy._id}`} />}
-        action={
-          post.postedBy._id === user._id &&
-          <IconButton>
-            <FontAwesomeIcon icon={faTrash} />
-          </IconButton>
-        }
-        title={
-          <Link to={'/user/' + post.postedBy._id}>
-            {post.postedBy.name}
-          </Link>
-        }
-        subheader={new Date(post.created).toDateString()}
-        className={classes.cardHeader}
-      />
+      {postedBy &&
+        <CardHeader
+          avatar={<Avatar src={`/api/v1/users/photo/${postedBy._id}`} />}
+          action={
+            postedBy._id === user._id &&
+            <IconButton>
+              <FontAwesomeIcon icon={faTrash} />
+            </IconButton>
+          }
+          title={
+            <Link to={'/user/' + postedBy._id}>
+              {postedBy.name}
+            </Link>
+          }
+          subheader={new Date(post.created).toDateString()}
+          className={classes.cardHeader}
+        />}
+
       <CardContent className={classes.cardContent}>
         <Typography component="p" className={classes.text}>
           {post.text}
