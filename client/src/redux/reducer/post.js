@@ -1,4 +1,9 @@
-import { LIST_SOCIAL_FEEDS, CREATE_POST, ADD_POST } from './../types';
+import {
+  LIST_SOCIAL_FEEDS,
+  CREATE_POST,
+  ADD_POST,
+  DELETE_POST
+} from './../types';
 
 const initialState = {
   posts: [],
@@ -19,11 +24,15 @@ export default function(state = initialState, action) {
         post: payload
       };
     case ADD_POST:
-      console.log(payload, 'payload for ADD_POST');
-
       return {
         ...state,
-        posts: [...state.posts, payload]
+        posts: [...state.posts]
+      };
+    case DELETE_POST:
+      return {
+        ...state,
+        posts: state.posts.filter(post => post._id !== payload),
+        post: null
       };
     default:
       return state;

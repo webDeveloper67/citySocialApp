@@ -12,10 +12,11 @@ import Divider from '@material-ui/core/Divider';
 
 // Font Awesome
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
-import { faTrash, faLink, faComment } from '@fortawesome/free-solid-svg-icons';
+import { faTrash, faHeart, faComment } from '@fortawesome/free-solid-svg-icons';
 
 // Redux
 import { connect } from 'react-redux';
+import { deletePost } from './../../redux/action/post';
 
 const useStyles = makeStyles(theme => ({
   card: {
@@ -48,22 +49,25 @@ const useStyles = makeStyles(theme => ({
   }
 }));
 
-const PostItem = ({ post, auth }) => {
+const PostItem = ({ post, auth, deletePost }) => {
   const classes = useStyles();
 
   const { user } = auth;
 
   const { postedBy } = post;
-  console.log(postedBy, '😟😟😟😟');
+
+  const removePost = () => {
+    deletePost(post._id);
+  };
 
   return (
-    <Card className={classes.card}>
+    <Card className={classes.card} key={post._id}>
       {postedBy &&
         <CardHeader
           avatar={<Avatar src={`/api/v1/users/photo/${postedBy._id}`} />}
           action={
             postedBy._id === user._id &&
-            <IconButton>
+            <IconButton onClick={removePost}>
               <FontAwesomeIcon icon={faTrash} />
             </IconButton>
           }
@@ -90,17 +94,31 @@ const PostItem = ({ post, auth }) => {
           </div>}
       </CardContent>
       {/* <CardActions>
-				{ this.state.like
-					? <IconButton className={classes.button} aria-label="Like" color="secondary">
-							<FontAwesomeIcon icon={faLink} />
-						</IconButton>
-					: <IconButton className={classes.button} aria-label="Unlike" color="secondary">
-							<h6>icon</h6>
-						</IconButton> } <span>{this.state.likes}</span>
-						<IconButton className={classes.button} aria-label="Comment" color="secondary">
-							<FontAwesomeIcon icon={faComment} />
-						</IconButton> <span>{this.state.comments.length}</span>
-			</CardActions> */}
+        {post.likes
+          ? <IconButton
+              className={classes.button}
+              aria-label="Like"
+              color="secondary"
+            >
+              <FontAwesomeIcon icon={faHeart} />
+            </IconButton>
+          : <IconButton
+              className={classes.button}
+              aria-label="Unlike"
+              color="secondary"
+            >
+              <h6>icon</h6>
+            </IconButton>}{' '}
+        <span>{post.likes}</span>
+        <IconButton
+          className={classes.button}
+          aria-label="Comment"
+          color="secondary"
+        >
+          <FontAwesomeIcon icon={faComment} />
+        </IconButton>{' '}
+        <span>{post.comments.length}</span>
+      </CardActions> */}
       <Divider />
       {/* <Comments postId={this.props.post._id} comments={this.state.comments} updateComments={this.updateComments}/> */}
     </Card>
@@ -111,4 +129,4 @@ const mapState = state => ({
   auth: state.auth
 });
 
-export default connect(mapState)(PostItem);
+export default connect(mapState, { deletePost })(PostItem);

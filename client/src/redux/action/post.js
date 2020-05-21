@@ -1,5 +1,11 @@
 import axios from 'axios';
-import { LIST_SOCIAL_FEEDS, CREATE_POST, ADD_POST } from './../types';
+import {
+  LIST_SOCIAL_FEEDS,
+  CREATE_POST,
+  ADD_POST,
+  DELETE_POST,
+  REMOVE_POST
+} from './../types';
 
 // Read posts for a user
 export const listSocialFeed = userId => async dispatch => {
@@ -42,9 +48,33 @@ export const addPost = post => (dispatch, state) => {
 
   updatedPosts.unshift(post);
 
-  console.log(post, 'post aas arg in addPost action 😒');
   dispatch({
     type: ADD_POST,
     payload: updatedPosts
   });
 };
+
+// Remove a post
+export const deletePost = postId => async dispatch => {
+  try {
+    const res = await axios.delete(`/api/v1/posts/${postId}`);
+
+    dispatch({
+      type: DELETE_POST,
+      payload: postId
+    });
+  } catch (error) {}
+};
+
+// export const removePost = post => (dispatch, state) => {
+//   const updatedPosts = state().post.posts;
+
+//   const index = updatedPosts.indexOf(post);
+
+//   updatedPosts.splice(index, 1);
+
+//   dispatch({
+//     type: REMOVE_POST,
+//     payload: updatedPosts
+//   });
+// };
