@@ -118,3 +118,33 @@ exports.findPeople = asyncMiddleware(async (req, res, next) => {
 
   res.json(users);
 });
+
+// Add Following
+exports.addFollowing = asyncMiddleware(async (req, res, next) => {
+  const result = await User.findByIdAndUpdate(req.body.userId, {
+    $push: { following: req.body.followId }
+  });
+
+  if (!result) {
+    return next(new ErrorResponse('Unable to be followed', 400));
+  }
+
+  next();
+});
+
+// Add Follower
+exports.addFollower = asyncMiddleware(async (req, res, next) => {
+  const result = await User.findByIdAndUpdate(
+    req.body.followId,
+    { $push: { followers: req.body.userId } },
+    { new: true }
+  )
+    .populate('following', '_id name')
+    .populate('followers', '_id name');
+
+  if (!result) {
+    return next(new ErrorResponse('Can not be followed', 400));
+  }
+
+  res.json(result);
+});

@@ -13,6 +13,10 @@ router.get('/me', authCont.protect, userCont.getMe, userCont.getAuthUser);
 router.route('/defaultphoto').get(userCont.defaultPhoto);
 router.route('/photo/:userId').get(userCont.userPhoto, userCont.defaultPhoto);
 
+router
+  .route('/follow')
+  .put(authCont.protect, userCont.addFollowing, userCont.addFollower);
+
 router.route('/findpeople/:userId').get(authCont.protect, userCont.findPeople);
 
 router
