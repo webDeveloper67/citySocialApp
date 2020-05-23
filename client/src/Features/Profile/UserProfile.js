@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useEffect } from 'react';
 import { Link } from 'react-router-dom';
 import { makeStyles } from '@material-ui/core/styles';
 import Paper from '@material-ui/core/Paper';
@@ -21,6 +21,8 @@ import { faEdit } from '@fortawesome/free-solid-svg-icons';
 
 // Redux
 import { connect } from 'react-redux';
+import { readUser } from './../../redux/action/user';
+import { listPostByUser } from './../../redux/action/post';
 
 const useStyles = makeStyles(theme => ({
   root: theme.mixins.gutters({
@@ -41,10 +43,39 @@ const useStyles = makeStyles(theme => ({
   }
 }));
 
-const UserProfile = ({ auth, match }) => {
+const UserProfile = ({ auth, posts, readUser, match, listPostByUser }) => {
   const classes = useStyles();
 
   const { user } = auth;
+
+  console.log(user, 'user in userProfile');
+
+  useEffect(() => {
+    init(match.params.userId);
+  });
+
+  const init = userId => {
+    readUser(userId);
+    checkFollow(user);
+  };
+
+  useEffect(
+    () => {
+      if (user && user !== null) {
+        listPostByUser(user._id);
+      }
+    },
+    [listPostByUser, user]
+  );
+
+  const checkFollow = user => {
+    if (user && user !== null) {
+      const match = user.followers.find(follower => {
+        return follower._id === user._id;
+      });
+      return match;
+    }
+  };
 
   const photoUrl =
     user && user._id
@@ -84,13 +115,14 @@ const UserProfile = ({ auth, match }) => {
             />
           </ListItem>}
       </List>
-      <ProfileTabs />
+      <ProfileTabs user={user} posts={posts} />
     </Paper>
   );
 };
 
 const mapState = state => ({
-  auth: state.auth
+  auth: state.auth,
+  posts: state.post.posts
 });
 
-export default connect(mapState)(UserProfile);
+export default connect(mapState, { readUser, listPostByUser })(UserProfile);

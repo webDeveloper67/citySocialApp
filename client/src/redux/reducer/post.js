@@ -2,7 +2,8 @@ import {
   LIST_SOCIAL_FEEDS,
   CREATE_POST,
   ADD_POST,
-  DELETE_POST
+  DELETE_POST,
+  LIST_POST_BY_USER
 } from './../types';
 
 const initialState = {
@@ -33,6 +34,11 @@ export default function(state = initialState, action) {
         ...state,
         posts: state.posts.filter(post => post._id !== payload),
         post: null
+      };
+    case LIST_POST_BY_USER:
+      return {
+        ...state,
+        posts: payload
       };
     default:
       return state;

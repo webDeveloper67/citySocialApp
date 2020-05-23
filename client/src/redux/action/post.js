@@ -4,7 +4,7 @@ import {
   CREATE_POST,
   ADD_POST,
   DELETE_POST,
-  REMOVE_POST
+  LIST_POST_BY_USER
 } from './../types';
 
 // Read posts for a user
@@ -57,7 +57,7 @@ export const addPost = post => (dispatch, state) => {
 // Remove a post
 export const deletePost = postId => async dispatch => {
   try {
-    const res = await axios.delete(`/api/v1/posts/${postId}`);
+    await axios.delete(`/api/v1/posts/${postId}`);
 
     dispatch({
       type: DELETE_POST,
@@ -66,15 +66,16 @@ export const deletePost = postId => async dispatch => {
   } catch (error) {}
 };
 
-// export const removePost = post => (dispatch, state) => {
-//   const updatedPosts = state().post.posts;
+// list posts by user
+export const listPostByUser = userId => async dispatch => {
+  try {
+    const res = await axios.get(`/api/v1/posts/by/${userId}`);
 
-//   const index = updatedPosts.indexOf(post);
-
-//   updatedPosts.splice(index, 1);
-
-//   dispatch({
-//     type: REMOVE_POST,
-//     payload: updatedPosts
-//   });
-// };
+    dispatch({
+      type: LIST_POST_BY_USER,
+      payload: res.data
+    });
+  } catch (error) {
+    console.log(error);
+  }
+};

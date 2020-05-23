@@ -93,7 +93,7 @@ const PostItem = ({ post, auth, deletePost }) => {
             />
           </div>}
       </CardContent>
-      {/* <CardActions>
+      <CardActions>
         {post.likes
           ? <IconButton
               className={classes.button}
@@ -118,7 +118,7 @@ const PostItem = ({ post, auth, deletePost }) => {
           <FontAwesomeIcon icon={faComment} />
         </IconButton>{' '}
         <span>{post.comments.length}</span>
-      </CardActions> */}
+      </CardActions>
       <Divider />
       {/* <Comments postId={this.props.post._id} comments={this.state.comments} updateComments={this.updateComments}/> */}
     </Card>

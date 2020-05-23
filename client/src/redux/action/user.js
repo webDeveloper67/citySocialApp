@@ -1,5 +1,5 @@
 import axios from 'axios';
-import { READ_USER, UPDATE_USER, DELETE_USER } from './../types';
+import { READ_USER, UPDATE_USER, DELETE_USER, FIND_PEOPLE } from './../types';
 
 // Load auth user
 export const readUser = userId => async dispatch => {
@@ -46,5 +46,19 @@ export const deleteUser = userId => async dispatch => {
     });
   } catch (error) {
     console.log(error, 'error if it can not delete user');
+  }
+};
+
+// Find People
+export const findPeople = userId => async dispatch => {
+  try {
+    const res = await axios.get(`/api/v1/users/findpeople/${userId}`);
+
+    dispatch({
+      type: FIND_PEOPLE,
+      payload: res.data
+    });
+  } catch (error) {
+    console.log(error);
   }
 };

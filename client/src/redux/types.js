@@ -18,4 +18,6 @@ export const DELETE_USER = 'DELETE_USER';
 export const CREATE_POST = 'CREATE_POST';
 export const ADD_POST = 'ADD_POST';
 export const DELETE_POST = 'DELETE_POST';
-export const REMOVE_POST = 'REMOVE_POST';
+
+export const LIST_POST_BY_USER = 'LIST_POST_BY_USER';
+export const FIND_PEOPLE = 'FIND_PEOPLE';

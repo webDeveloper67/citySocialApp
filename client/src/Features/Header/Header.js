@@ -1,10 +1,11 @@
-import React, { useState, useEffect, useCallback } from 'react';
+import React, { useState, useEffect } from 'react';
 import { Link } from 'react-router-dom';
 import { makeStyles } from '@material-ui/core/styles';
 import Grid from '@material-ui/core/Grid';
 import Container from '@material-ui/core/Container';
 import Button from '@material-ui/core/Button';
 import Typography from '@material-ui/core/Typography';
+import FindPeople from './../Profile/FindPeople';
 
 // FontAwesome
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
@@ -153,9 +154,9 @@ const Header = ({ auth, history, logout }) => {
           <Grid item xs={8} sm={7}>
             <SocialFeed />
           </Grid>
-          {/* <Grid item xs={6} sm={5}>
-              <FindPeople/>
-            </Grid> */}
+          <Grid item xs={6} sm={5}>
+            <FindPeople />
+          </Grid>
         </Grid>}
     </Grid>
   );

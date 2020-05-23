@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import { withRouter, Redirect } from 'react-router-dom';
+import { withRouter } from 'react-router-dom';
 import IconButton from '@material-ui/core/IconButton';
 import Dialog from '@material-ui/core/Dialog';
 import DialogTitle from '@material-ui/core/DialogTitle';
@@ -20,6 +20,8 @@ import { logout } from './../../redux/action/auth';
 
 const DeleteUser = ({ userId, deleteUser, logout, history }) => {
   const [open, setOpen] = useState(false);
+
+  // eslint-disable-next-line no-unused-vars
   const [redirect, setRedirect] = useState(false);
 
   const openDeleteDialog = () => {

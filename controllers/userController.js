@@ -103,3 +103,18 @@ exports.deleteUser = asyncMiddleware(async (req, res, next) => {
     data: null
   });
 });
+
+// findPeople
+exports.findPeople = asyncMiddleware(async (req, res, next) => {
+  let following = req.user.following;
+
+  following.push(req.user._id);
+
+  const users = await User.find({ _id: { $nin: following } }).select('name');
+
+  if (!users || users === []) {
+    return next(new ErrorResponse('Users not found!', 400));
+  }
+
+  res.json(users);
+});
