@@ -21,6 +21,7 @@ import Header from './Features/Header/Header';
 // Auth
 import Signup from './Features/Auth/Signup';
 import Signin from './Features/Auth/Signin';
+import Users from './Features/Profile/Users';
 
 // Profile
 import UserProfile from './Features/Profile/UserProfile';
@@ -87,6 +88,7 @@ const App = () => {
           <Switch>
             <Route exact path="/signup" component={Signup} />
             <Route exact path="/signin" component={Signin} />
+            <Route exact path="/users" component={Users} />
             <Route exact path="/user/:userId" component={UserProfile} />
             <PrivateRoute
               exact

@@ -23,7 +23,7 @@ import { faEye } from '@fortawesome/free-solid-svg-icons';
 
 const useStyles = makeStyles(theme => ({
   root: theme.mixins.gutters({
-    padding: theme.spacing.unit,
+    padding: theme.spacing(),
     margin: 0
   }),
   title: {

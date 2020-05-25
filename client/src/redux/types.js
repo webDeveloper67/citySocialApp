@@ -21,3 +21,5 @@ export const DELETE_POST = 'DELETE_POST';
 
 export const LIST_POST_BY_USER = 'LIST_POST_BY_USER';
 export const FIND_PEOPLE = 'FIND_PEOPLE';
+
+export const GET_ALL_USERS = 'GET_ALL_USERS';

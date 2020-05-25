@@ -50,19 +50,21 @@ exports.postPhoto = (req, res, next) => {
 };
 
 // Get posts by UserId
-exports.listPostByUser = asyncMiddleware(async (req, res, next) => {
-  const posts = await Post.find({ postedBy: req.user._id })
+exports.listPostByUser = async (req, res, next) => {
+  await Post.find({ postedBy: req.profile._id })
     .populate('comments', 'text created')
     .populate('comments.postedBy', '_id name')
     .populate('postedBy', '_id name')
-    .sort('-created');
-
-  if (!posts) {
-    return next(new ErrorResponse('Posts for this user can not be found', 400));
-  }
-
-  res.json(posts);
-});
+    .sort('-created')
+    .exec((err, posts) => {
+      if (!posts || err || posts === []) {
+        return next(
+          new ErrorResponse('Posts for this user can not be found', 400)
+        );
+      }
+      res.json(posts);
+    });
+};
 
 // like a post
 exports.likePost = asyncMiddleware(async (req, res, next) => {

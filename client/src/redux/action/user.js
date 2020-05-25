@@ -1,5 +1,11 @@
 import axios from 'axios';
-import { READ_USER, UPDATE_USER, DELETE_USER, FIND_PEOPLE } from './../types';
+import {
+  READ_USER,
+  UPDATE_USER,
+  DELETE_USER,
+  FIND_PEOPLE,
+  GET_ALL_USERS
+} from './../types';
 
 // Load auth user
 export const readUser = userId => async dispatch => {
@@ -56,6 +62,20 @@ export const findPeople = userId => async dispatch => {
 
     dispatch({
       type: FIND_PEOPLE,
+      payload: res.data
+    });
+  } catch (error) {
+    console.log(error);
+  }
+};
+
+// Get all users
+export const getAllUsers = () => async dispatch => {
+  try {
+    const res = await axios.get(`/api/v1/users`);
+
+    dispatch({
+      type: GET_ALL_USERS,
       payload: res.data
     });
   } catch (error) {

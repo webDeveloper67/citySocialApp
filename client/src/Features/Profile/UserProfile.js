@@ -1,4 +1,4 @@
-import React, { useEffect } from 'react';
+import React, { useEffect, useCallback } from 'react';
 import { Link } from 'react-router-dom';
 import { makeStyles } from '@material-ui/core/styles';
 import Paper from '@material-ui/core/Paper';
@@ -48,11 +48,12 @@ const UserProfile = ({ auth, posts, readUser, match, listPostByUser }) => {
 
   const { user } = auth;
 
-  console.log(user, 'user in userProfile');
-
-  useEffect(() => {
-    init(match.params.userId);
-  });
+  useEffect(
+    () => {
+      init(match.params.userId);
+    },
+    [match.params.userId]
+  );
 
   const init = userId => {
     readUser(userId);
