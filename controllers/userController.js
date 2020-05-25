@@ -106,45 +106,79 @@ exports.deleteUser = asyncMiddleware(async (req, res, next) => {
 
 // findPeople
 exports.findPeople = asyncMiddleware(async (req, res, next) => {
-  let following = req.user.following;
-
-  following.push(req.user._id);
-
+  let following = req.profile.following;
+  following.push(req.profile._id);
   const users = await User.find({ _id: { $nin: following } }).select('name');
 
-  if (!users || users === []) {
-    return next(new ErrorResponse('Users not found!', 400));
+  if (!users) {
+    return next(new ErrorResponse('Unable to find people', 400));
   }
 
   res.json(users);
 });
 
-// Add Following
+// Add Following Middleware
 exports.addFollowing = asyncMiddleware(async (req, res, next) => {
-  const result = await User.findByIdAndUpdate(req.body.userId, {
-    $push: { following: req.body.followId }
-  });
-
-  if (!result) {
-    return next(new ErrorResponse('Unable to be followed', 400));
-  }
-
-  next();
+  await User.findByIdAndUpdate(
+    req.body.userId,
+    { $push: { following: req.body.followId } },
+    (err, result) => {
+      if (err) {
+        return res.status(400).json({
+          error: 'errorHandler.getErrorMessage(err)'
+        });
+      }
+      next();
+    }
+  );
 });
 
 // Add Follower
 exports.addFollower = asyncMiddleware(async (req, res, next) => {
-  const result = await User.findByIdAndUpdate(
+  await User.findByIdAndUpdate(
     req.body.followId,
     { $push: { followers: req.body.userId } },
     { new: true }
   )
     .populate('following', '_id name')
-    .populate('followers', '_id name');
+    .populate('followers', '_id name')
+    .exec((err, result) => {
+      if (err || !result) {
+        return next(new ErrorResponse('Can not be followed', 400));
+      }
 
-  if (!result) {
-    return next(new ErrorResponse('Can not be followed', 400));
-  }
+      res.json(result);
+    });
+});
 
-  res.json(result);
+// Remove following Middleware
+exports.removeFollowing = asyncMiddleware(async (req, res, next) => {
+  await User.findByIdAndUpdate(
+    req.body.userId,
+    { $pull: { following: req.body.unfollowId } },
+    (err, result) => {
+      if (err) {
+        return next(new ErrorResponse('Unable to be unfollowed'));
+      }
+      next();
+    }
+  );
+});
+
+// Remove follower
+exports.removeFollower = asyncMiddleware(async (req, res, next) => {
+  await User.findByIdAndUpdate(
+    req.body.unfollowId,
+    { $pull: { followers: req.body.userId } },
+    { new: true }
+  )
+    .populate('following', '_id name')
+    .populate('followers', '_id name')
+    .exec((err, result) => {
+      if (err) {
+        return next(new ErrorResponse('Can not be unfollowed'));
+      }
+
+      res.json(result);
+    });
 });

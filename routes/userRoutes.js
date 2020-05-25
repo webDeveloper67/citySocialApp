@@ -17,6 +17,10 @@ router
   .route('/follow')
   .put(authCont.protect, userCont.addFollowing, userCont.addFollower);
 
+router
+  .route('/unfollow')
+  .put(authCont.protect, userCont.removeFollowing, userCont.removeFollower);
+
 router.route('/findpeople/:userId').get(authCont.protect, userCont.findPeople);
 
 router
