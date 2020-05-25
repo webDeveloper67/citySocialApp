@@ -84,59 +84,57 @@ exports.likePost = asyncMiddleware(async (req, res, next) => {
 
 // UNLIKE a post
 exports.unlikePost = asyncMiddleware(async (req, res, next) => {
-  const post = await Post.findByIdAndUpdate(
+  await Post.findByIdAndUpdate(
     req.body.postId,
     { $pull: { likes: req.body.userId } },
     { new: true }
-  );
-
-  if (!post) {
-    return next(new ErrorResponse('Post can not be unliked.', 400));
-  }
-
-  res.json(post);
+  ).exec((err, result) => {
+    if (err) {
+      return next(new ErrorResponse('Post can not be unliked.', 400));
+    }
+    res.json(result);
+  });
 });
 
 // comment over a post
 exports.commentPost = asyncMiddleware(async (req, res, next) => {
   let comment = req.body.comment;
   comment.postedBy = req.body.userId;
-
-  const post = await Post.findByIdAndUpdate(
+  await Post.findByIdAndUpdate(
     req.body.postId,
     { $push: { comments: comment } },
     { new: true }
   )
     .populate('comments.postedBy', '_id name')
-    .populate('postedBy', '_id name');
-
-  if (!post) {
-    return next(new ErrorResponse('You can not comment on this post', 400));
-  }
-
-  res.json(post);
+    .populate('postedBy', '_id name')
+    .exec((err, result) => {
+      if (err) {
+        return next(new ErrorResponse('You can not comment on this post', 400));
+      }
+      res.json(result);
+    });
 });
 
 // UnComment over a post
 exports.uncommentPost = asyncMiddleware(async (req, res, next) => {
   let comment = req.body.comment;
-  const post = await Post.findByIdAndUpdate(
+  await Post.findByIdAndUpdate(
     req.body.postId,
     { $pull: { comments: { _id: comment._id } } },
     { new: true }
   )
     .populate('comments.postedBy', '_id name')
-    .populate('postedBy', '_id name');
-
-  if (!post) {
-    return next(new ErrorResponse('You can not uncomment this post', 400));
-  }
-
-  res.json(post);
+    .populate('postedBy', '_id name')
+    .exec((err, result) => {
+      if (err) {
+        return next(new ErrorResponse('You can not uncomment this post', 400));
+      }
+      res.json(result);
+    });
 });
 
 // Remove a post
-exports.removePost = asyncMiddleware(async (req, res, next) => {
+exports.removePost = (req, res, next) => {
   let post = req.post;
 
   post.remove((err, deletedPost) => {
@@ -145,7 +143,7 @@ exports.removePost = asyncMiddleware(async (req, res, next) => {
     }
     res.json(deletedPost);
   });
-});
+};
 
 // get Owner of a post
 exports.postOwner = async (req, res, next) => {
