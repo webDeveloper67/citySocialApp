@@ -23,3 +23,6 @@ export const LIST_POST_BY_USER = 'LIST_POST_BY_USER';
 export const FIND_PEOPLE = 'FIND_PEOPLE';
 
 export const GET_ALL_USERS = 'GET_ALL_USERS';
+
+export const LIKE_POST = 'LIKE_POST';
+export const UNLIKE_POST = 'UNLIKE_POST';

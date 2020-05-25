@@ -4,7 +4,9 @@ import {
   CREATE_POST,
   ADD_POST,
   DELETE_POST,
-  LIST_POST_BY_USER
+  LIST_POST_BY_USER,
+  LIKE_POST,
+  UNLIKE_POST
 } from './../types';
 
 // Read posts for a user
@@ -73,6 +75,44 @@ export const listPostByUser = userId => async dispatch => {
 
     dispatch({
       type: LIST_POST_BY_USER,
+      payload: res.data
+    });
+  } catch (error) {
+    console.log(error);
+  }
+};
+
+// Like a post
+export const likePost = (params, postId) => async dispatch => {
+  const config = {
+    headers: {
+      'Content-Type': 'application/json'
+    }
+  };
+
+  const body = JSON.stringify({ userId: params.userId, postId });
+
+  try {
+    const res = await axios.put(`/api/v1/posts/like`, body, config);
+
+    dispatch({
+      type: LIKE_POST,
+      payload: res.data
+    });
+  } catch (error) {
+    console.log(error);
+  }
+};
+
+// Unlike a post
+export const unlikePost = (params, postId) => async dispatch => {
+  try {
+    const body = JSON.stringify({ userId: params.userId, postId });
+
+    const res = await axios.put(`/api/v1/posts/unlike`, body);
+
+    dispatch({
+      type: UNLIKE_POST,
       payload: res.data
     });
   } catch (error) {

@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useState } from 'react';
 import { Link } from 'react-router-dom';
 import { makeStyles } from '@material-ui/core/styles';
 import Card from '@material-ui/core/Card';
@@ -12,11 +12,16 @@ import Divider from '@material-ui/core/Divider';
 
 // Font Awesome
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
-import { faTrash, faHeart, faComment } from '@fortawesome/free-solid-svg-icons';
+import {
+  faTrash,
+  faHeart,
+  faComment,
+  faHeartbeat
+} from '@fortawesome/free-solid-svg-icons';
 
 // Redux
 import { connect } from 'react-redux';
-import { deletePost } from './../../redux/action/post';
+import { deletePost, likePost, unlikePost } from './../../redux/action/post';
 
 const useStyles = makeStyles(theme => ({
   card: {
@@ -49,12 +54,32 @@ const useStyles = makeStyles(theme => ({
   }
 }));
 
-const PostItem = ({ post, auth, deletePost }) => {
+const PostItem = ({
+  post,
+  auth,
+  deletePost,
+  likePost,
+  unlikePost,
+  likesLength
+}) => {
   const classes = useStyles();
 
   const { user } = auth;
 
   const { postedBy } = post;
+
+  const [likeDialog, setLikeDialog] = useState(false);
+
+  const like = () => {
+    let callApi = likeDialog ? unlikePost : likePost;
+    callApi(
+      {
+        userId: user._id
+      },
+      post._id
+    );
+    setLikeDialog(!likeDialog);
+  };
 
   const removePost = () => {
     deletePost(post._id);
@@ -94,11 +119,12 @@ const PostItem = ({ post, auth, deletePost }) => {
           </div>}
       </CardContent>
       <CardActions>
-        {post.likes
+        {likeDialog
           ? <IconButton
               className={classes.button}
               aria-label="Like"
               color="secondary"
+              onClick={like}
             >
               <FontAwesomeIcon icon={faHeart} />
             </IconButton>
@@ -106,10 +132,11 @@ const PostItem = ({ post, auth, deletePost }) => {
               className={classes.button}
               aria-label="Unlike"
               color="secondary"
+              onClick={like}
             >
-              <h6>icon</h6>
-            </IconButton>}{' '}
-        <span>{post.likes}</span>
+              <FontAwesomeIcon icon={faHeartbeat} />
+            </IconButton>}
+        <span>{likesLength && likesLength.length}</span>
         <IconButton
           className={classes.button}
           aria-label="Comment"
@@ -126,7 +153,10 @@ const PostItem = ({ post, auth, deletePost }) => {
 };
 
 const mapState = state => ({
-  auth: state.auth
+  auth: state.auth,
+  likesLength: state.post.likesLength
 });
 
-export default connect(mapState, { deletePost })(PostItem);
+export default connect(mapState, { deletePost, likePost, unlikePost })(
+  PostItem
+);

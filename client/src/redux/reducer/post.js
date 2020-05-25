@@ -3,12 +3,14 @@ import {
   CREATE_POST,
   ADD_POST,
   DELETE_POST,
-  LIST_POST_BY_USER
+  LIST_POST_BY_USER,
+  LIKE_POST
 } from './../types';
 
 const initialState = {
   posts: [],
-  post: null
+  post: null,
+  likesLength: 0
 };
 
 export default function(state = initialState, action) {
@@ -39,6 +41,11 @@ export default function(state = initialState, action) {
       return {
         ...state,
         posts: payload
+      };
+    case LIKE_POST:
+      return {
+        ...state,
+        likesLength: payload.likes
       };
     default:
       return state;
