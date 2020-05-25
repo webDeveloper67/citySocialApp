@@ -36,11 +36,13 @@ exports.createPost = asyncMiddleware((req, res, next) => {
 
 // get post by its ID
 exports.postByID = async (req, res, next, id) => {
-  const post = await Post.findById(id).populate('postedBy', '_id name');
-
-  if (!post) return next(new ErrorResponse('Post not found', 400));
-  req.post = post;
-  next();
+  Post.findById(id).populate('postedBy', '_id name').exec((err, post) => {
+    if (err || !post || post === []) {
+      return next(new ErrorResponse('Post not found!', 400));
+    }
+    req.post = post;
+    next();
+  });
 };
 
 // Photo for a post
@@ -68,17 +70,16 @@ exports.listPostByUser = async (req, res, next) => {
 
 // like a post
 exports.likePost = asyncMiddleware(async (req, res, next) => {
-  const post = await Post.findByIdAndUpdate(
+  await Post.findByIdAndUpdate(
     req.body.postId,
     { $push: { likes: req.body.userId } },
     { new: true }
-  );
-
-  if (!post) {
-    return next(new ErrorResponse('Post can not be liked.', 400));
-  }
-
-  res.json(post);
+  ).exec((err, result) => {
+    if (err) {
+      return next(new ErrorResponse('Post can not be liked.', 400));
+    }
+    res.json(result);
+  });
 });
 
 // UNLIKE a post
@@ -163,19 +164,19 @@ exports.postOwner = async (req, res, next) => {
 
 // Get Social Feeds
 exports.listSocialFeed = asyncMiddleware(async (req, res, next) => {
-  let following = req.user.following;
+  let following = req.profile.following;
 
-  following.push(req.user._id);
+  following.push(req.profile._id);
 
-  const posts = await Post.find({ postedBy: { $in: req.user.following } })
+  await Post.find({ postedBy: { $in: req.profile.following } })
     .populate('comments', 'text created')
     .populate('comments.postedBy', '_id name')
     .populate('postedBy', '_id name')
-    .sort('-created');
-
-  if (!posts) {
-    return next(new ErrorResponse('Posts not found', 400));
-  }
-
-  res.json(posts);
+    .sort('-created')
+    .exec((err, posts) => {
+      if (!posts || err || posts === []) {
+        return next(new ErrorResponse('Posts not found', 400));
+      }
+      res.json(posts);
+    });
 });
