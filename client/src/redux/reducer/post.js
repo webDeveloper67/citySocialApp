@@ -4,13 +4,13 @@ import {
   ADD_POST,
   DELETE_POST,
   LIST_POST_BY_USER,
-  LIKE_POST
+  LIKE_POST,
+  UNLIKE_POST
 } from './../types';
 
 const initialState = {
   posts: [],
-  post: null,
-  likesLength: 0
+  post: null
 };
 
 export default function(state = initialState, action) {
@@ -43,9 +43,12 @@ export default function(state = initialState, action) {
         posts: payload
       };
     case LIKE_POST:
+    case UNLIKE_POST:
       return {
         ...state,
-        likesLength: payload.likes
+        posts: state.posts.map(
+          post => (post.likes ? { ...post, likes: payload.likes } : post)
+        )
       };
     default:
       return state;

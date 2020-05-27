@@ -97,7 +97,7 @@ export const likePost = (params, postId) => async dispatch => {
 
     dispatch({
       type: LIKE_POST,
-      payload: res.data
+      payload: { likes: res.data.likes }
     });
   } catch (error) {
     console.log(error);
@@ -106,14 +106,19 @@ export const likePost = (params, postId) => async dispatch => {
 
 // Unlike a post
 export const unlikePost = (params, postId) => async dispatch => {
-  try {
-    const body = JSON.stringify({ userId: params.userId, postId });
+  const config = {
+    headers: {
+      'Content-Type': 'application/json'
+    }
+  };
 
-    const res = await axios.put(`/api/v1/posts/unlike`, body);
+  const body = JSON.stringify({ userId: params.userId, postId });
+  try {
+    const res = await axios.put(`/api/v1/posts/unlike`, body, config);
 
     dispatch({
       type: UNLIKE_POST,
-      payload: res.data
+      payload: { likes: res.data.likes }
     });
   } catch (error) {
     console.log(error);

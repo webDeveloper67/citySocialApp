@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { Link } from 'react-router-dom';
 import { makeStyles } from '@material-ui/core/styles';
 import Card from '@material-ui/core/Card';
@@ -14,10 +14,10 @@ import Divider from '@material-ui/core/Divider';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import {
   faTrash,
-  faHeart,
   faComment,
-  faHeartbeat
+  faHeart as faHeartSolid
 } from '@fortawesome/free-solid-svg-icons';
+import { faHeart as faHeartRegular } from '@fortawesome/free-regular-svg-icons';
 
 // Redux
 import { connect } from 'react-redux';
@@ -54,31 +54,40 @@ const useStyles = makeStyles(theme => ({
   }
 }));
 
-const PostItem = ({
-  post,
-  auth,
-  deletePost,
-  likePost,
-  unlikePost,
-  likesLength
-}) => {
+const PostItem = ({ post, auth, deletePost, likePost, unlikePost }) => {
   const classes = useStyles();
 
   const { user } = auth;
 
   const { postedBy } = post;
 
-  const [likeDialog, setLikeDialog] = useState(false);
+  const [likeData, setLikeData] = useState({
+    like: false
+  });
 
-  const like = () => {
-    let callApi = likeDialog ? unlikePost : likePost;
+  const { like } = likeData;
+
+  useEffect(
+    () => {
+      const checkLike = likeIndex => {
+        let match = likeIndex.indexOf(user._id) !== -1;
+        return match;
+      };
+
+      setLikeData({ ...likeData, like: checkLike(post.likes) });
+    },
+    [post.likes, user._id]
+  );
+
+  const likePostFunc = () => {
+    let callApi = like ? unlikePost : likePost;
     callApi(
       {
         userId: user._id
       },
       post._id
     );
-    setLikeDialog(!likeDialog);
+    setLikeData({ like: !like });
   };
 
   const removePost = () => {
@@ -119,24 +128,24 @@ const PostItem = ({
           </div>}
       </CardContent>
       <CardActions>
-        {likeDialog
+        {like
           ? <IconButton
               className={classes.button}
               aria-label="Like"
               color="secondary"
-              onClick={like}
+              onClick={likePostFunc}
             >
-              <FontAwesomeIcon icon={faHeart} />
+              <FontAwesomeIcon icon={faHeartSolid} />
             </IconButton>
           : <IconButton
               className={classes.button}
               aria-label="Unlike"
               color="secondary"
-              onClick={like}
+              onClick={likePostFunc}
             >
-              <FontAwesomeIcon icon={faHeartbeat} />
+              <FontAwesomeIcon icon={faHeartRegular} />
             </IconButton>}
-        <span>{likesLength && likesLength.length}</span>
+        <span>{post.likes.length}</span>
         <IconButton
           className={classes.button}
           aria-label="Comment"
@@ -153,8 +162,7 @@ const PostItem = ({
 };
 
 const mapState = state => ({
-  auth: state.auth,
-  likesLength: state.post.likesLength
+  auth: state.auth
 });
 
 export default connect(mapState, { deletePost, likePost, unlikePost })(
