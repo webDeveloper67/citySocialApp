@@ -5,12 +5,15 @@ import {
   DELETE_POST,
   LIST_POST_BY_USER,
   LIKE_POST,
-  UNLIKE_POST
+  UNLIKE_POST,
+  COMMENT_POST,
+  UPDATE_COMMENT
 } from './../types';
 
 const initialState = {
   posts: [],
-  post: null
+  post: null,
+  comments: []
 };
 
 export default function(state = initialState, action) {
@@ -49,6 +52,20 @@ export default function(state = initialState, action) {
         posts: state.posts.map(
           post => (post.likes ? { ...post, likes: payload.likes } : post)
         )
+      };
+    case COMMENT_POST:
+      return {
+        ...state,
+        posts: state.posts.map(
+          post =>
+            post.comments ? { ...post, comments: payload.comments } : post
+        ),
+        comments: payload.comments
+      };
+    case UPDATE_COMMENT:
+      return {
+        ...state,
+        comments: payload
       };
     default:
       return state;

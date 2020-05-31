@@ -9,6 +9,7 @@ import Typography from '@material-ui/core/Typography';
 import CardContent from '@material-ui/core/CardContent';
 import CardActions from '@material-ui/core/CardActions';
 import Divider from '@material-ui/core/Divider';
+import Comments from './Comments';
 
 // Font Awesome
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
@@ -21,7 +22,12 @@ import { faHeart as faHeartRegular } from '@fortawesome/free-regular-svg-icons';
 
 // Redux
 import { connect } from 'react-redux';
-import { deletePost, likePost, unlikePost } from './../../redux/action/post';
+import {
+  deletePost,
+  likePost,
+  unlikePost,
+  updateComments
+} from './../../redux/action/post';
 
 const useStyles = makeStyles(theme => ({
   card: {
@@ -54,7 +60,15 @@ const useStyles = makeStyles(theme => ({
   }
 }));
 
-const PostItem = ({ post, auth, deletePost, likePost, unlikePost }) => {
+const PostItem = ({
+  post,
+  auth,
+  deletePost,
+  likePost,
+  unlikePost,
+  comments,
+  updateComments
+}) => {
   const classes = useStyles();
 
   const { user } = auth;
@@ -73,10 +87,11 @@ const PostItem = ({ post, auth, deletePost, likePost, unlikePost }) => {
         let match = likeIndex.indexOf(user._id) !== -1;
         return match;
       };
-
-      setLikeData({ ...likeData, like: checkLike(post.likes) });
+      if (user && user !== null) {
+        setLikeData({ ...likeData, like: checkLike(post.likes) });
+      }
     },
-    [post.likes, user._id]
+    [post.likes, updateComments, user, user._id]
   );
 
   const likePostFunc = () => {
@@ -156,15 +171,23 @@ const PostItem = ({ post, auth, deletePost, likePost, unlikePost }) => {
         <span>{post.comments.length}</span>
       </CardActions>
       <Divider />
-      {/* <Comments postId={this.props.post._id} comments={this.state.comments} updateComments={this.updateComments}/> */}
+      <Comments
+        postId={post._id}
+        comments={comments}
+        updateComments={updateComments}
+      />
     </Card>
   );
 };
 
 const mapState = state => ({
-  auth: state.auth
+  auth: state.auth,
+  comments: state.post.comments
 });
 
-export default connect(mapState, { deletePost, likePost, unlikePost })(
-  PostItem
-);
+export default connect(mapState, {
+  deletePost,
+  likePost,
+  unlikePost,
+  updateComments
+})(PostItem);

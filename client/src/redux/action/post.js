@@ -6,7 +6,10 @@ import {
   DELETE_POST,
   LIST_POST_BY_USER,
   LIKE_POST,
-  UNLIKE_POST
+  UNLIKE_POST,
+  COMMENT_POST,
+  UNCOMMENT_POST,
+  UPDATE_COMMENT
 } from './../types';
 
 // Read posts for a user
@@ -124,3 +127,38 @@ export const unlikePost = (params, postId) => async dispatch => {
     console.log(error);
   }
 };
+
+// Comment on a post
+export const comment = (userId, postId, comment) => async dispatch => {
+  try {
+    const config = {
+      headers: {
+        'Content-Type': 'application/json'
+      }
+    };
+
+    const body = JSON.stringify({
+      userId,
+      postId,
+      comment
+    });
+    const res = await axios.put('/api/v1/posts/comment', body, config);
+
+    console.log(res.data.comments, 'data when we comment on a post');
+
+    dispatch({
+      type: COMMENT_POST,
+      payload: res.data
+    });
+  } catch (error) {
+    console.log(
+      error,
+      'error when we are trying to create a comment on a post'
+    );
+  }
+};
+
+export const updateComments = comments => ({
+  type: UPDATE_COMMENT,
+  payload: comments
+});

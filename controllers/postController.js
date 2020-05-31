@@ -97,10 +97,11 @@ exports.unlikePost = asyncMiddleware(async (req, res, next) => {
 });
 
 // comment over a post
-exports.commentPost = asyncMiddleware(async (req, res, next) => {
+exports.commentPost = (req, res, next) => {
   let comment = req.body.comment;
   comment.postedBy = req.body.userId;
-  await Post.findByIdAndUpdate(
+
+  Post.findByIdAndUpdate(
     req.body.postId,
     { $push: { comments: comment } },
     { new: true }
@@ -113,7 +114,7 @@ exports.commentPost = asyncMiddleware(async (req, res, next) => {
       }
       res.json(result);
     });
-});
+};
 
 // UnComment over a post
 exports.uncommentPost = asyncMiddleware(async (req, res, next) => {

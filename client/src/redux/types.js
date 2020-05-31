@@ -26,3 +26,7 @@ export const GET_ALL_USERS = 'GET_ALL_USERS';
 
 export const LIKE_POST = 'LIKE_POST';
 export const UNLIKE_POST = 'UNLIKE_POST';
+
+export const COMMENT_POST = 'COMMENT_POST';
+export const UNCOMMENT_POST = 'UNCOMMENT_POST';
+export const UPDATE_COMMENT = 'UPDATE_COMMENT';
