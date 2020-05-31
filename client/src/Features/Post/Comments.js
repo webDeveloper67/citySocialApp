@@ -8,7 +8,7 @@ import TextField from '@material-ui/core/TextField';
 
 // Redux
 import { connect } from 'react-redux';
-import { comment, updateComments } from './../../redux/action/post';
+import { comment } from './../../redux/action/post';
 
 // Font Awesome
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
@@ -43,7 +43,7 @@ const useStyles = makeStyles(theme => ({
   }
 }));
 
-const Comments = ({ comment, postId, auth, comments, updateComments }) => {
+const Comments = ({ comment, postId, auth, updateComments, comments }) => {
   const classes = useStyles();
 
   const [commentText, setCommentText] = useState({
@@ -65,7 +65,6 @@ const Comments = ({ comment, postId, auth, comments, updateComments }) => {
       event.preventDefault();
       comment(userId, postId, { text });
       setCommentText({ ...commentText, text: '' });
-      updateComments(comments);
     }
   };
 
@@ -137,7 +136,8 @@ const Comments = ({ comment, postId, auth, comments, updateComments }) => {
 };
 
 const mapState = state => ({
-  auth: state.auth
+  auth: state.auth,
+  comments: state.post.comments
 });
 
-export default connect(mapState, { comment, updateComments })(Comments);
+export default connect(mapState, { comment })(Comments);

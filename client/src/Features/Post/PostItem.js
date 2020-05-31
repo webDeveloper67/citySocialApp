@@ -26,7 +26,7 @@ import {
   deletePost,
   likePost,
   unlikePost,
-  updateComments
+  addComment
 } from './../../redux/action/post';
 
 const useStyles = makeStyles(theme => ({
@@ -60,15 +60,7 @@ const useStyles = makeStyles(theme => ({
   }
 }));
 
-const PostItem = ({
-  post,
-  auth,
-  deletePost,
-  likePost,
-  unlikePost,
-  comments,
-  updateComments
-}) => {
+const PostItem = ({ post, auth, deletePost, likePost, unlikePost }) => {
   const classes = useStyles();
 
   const { user } = auth;
@@ -91,7 +83,7 @@ const PostItem = ({
         setLikeData({ ...likeData, like: checkLike(post.likes) });
       }
     },
-    [post.likes, updateComments, user, user._id]
+    [post.likes, user, user._id]
   );
 
   const likePostFunc = () => {
@@ -171,23 +163,17 @@ const PostItem = ({
         <span>{post.comments.length}</span>
       </CardActions>
       <Divider />
-      <Comments
-        postId={post._id}
-        comments={comments}
-        updateComments={updateComments}
-      />
+      <Comments postId={post._id} />
     </Card>
   );
 };
 
 const mapState = state => ({
-  auth: state.auth,
-  comments: state.post.comments
+  auth: state.auth
 });
 
 export default connect(mapState, {
   deletePost,
   likePost,
-  unlikePost,
-  updateComments
+  unlikePost
 })(PostItem);

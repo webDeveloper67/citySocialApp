@@ -29,4 +29,4 @@ export const UNLIKE_POST = 'UNLIKE_POST';
 
 export const COMMENT_POST = 'COMMENT_POST';
 export const UNCOMMENT_POST = 'UNCOMMENT_POST';
-export const UPDATE_COMMENT = 'UPDATE_COMMENT';
+export const ADD_COMMENT = 'ADD_COMMENT';

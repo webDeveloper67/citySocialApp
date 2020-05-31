@@ -9,7 +9,7 @@ import {
   UNLIKE_POST,
   COMMENT_POST,
   UNCOMMENT_POST,
-  UPDATE_COMMENT
+  ADD_COMMENT
 } from './../types';
 
 // Read posts for a user
@@ -144,8 +144,6 @@ export const comment = (userId, postId, comment) => async dispatch => {
     });
     const res = await axios.put('/api/v1/posts/comment', body, config);
 
-    console.log(res.data.comments, 'data when we comment on a post');
-
     dispatch({
       type: COMMENT_POST,
       payload: res.data
@@ -157,8 +155,3 @@ export const comment = (userId, postId, comment) => async dispatch => {
     );
   }
 };
-
-export const updateComments = comments => ({
-  type: UPDATE_COMMENT,
-  payload: comments
-});
