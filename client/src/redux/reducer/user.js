@@ -2,7 +2,7 @@ import { FIND_PEOPLE, GET_ALL_USERS, READ_USER } from './../types';
 
 const initialState = {
   users: [],
-  user: null
+  user: {}
 };
 
 export default function(state = initialState, action) {

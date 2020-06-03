@@ -105,16 +105,16 @@ exports.deleteUser = asyncMiddleware(async (req, res, next) => {
 });
 
 // findPeople
-exports.findPeople = asyncMiddleware(async (req, res, next) => {
+exports.findPeople = asyncMiddleware((req, res, next) => {
   let following = req.profile.following;
   following.push(req.profile._id);
-  const users = await User.find({ _id: { $nin: following } }).select('name');
 
-  if (!users) {
-    return next(new ErrorResponse('Unable to find people', 400));
-  }
-
-  res.json(users);
+  User.find({ _id: { $nin: following } }, (err, users) => {
+    if (err) {
+      return next(new ErrorResponse('Unable to find people', 400));
+    }
+    res.json(users);
+  }).select('name');
 });
 
 // Add Following Middleware

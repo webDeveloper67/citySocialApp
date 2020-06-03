@@ -4,7 +4,8 @@ import {
   LOAD_USER,
   LOGOUT,
   UPDATE_USER,
-  DELETE_USER
+  DELETE_USER,
+  READ_USER
 } from './../types';
 
 const initialState = {
@@ -30,6 +31,7 @@ export default function(state = initialState, action) {
       };
     case LOAD_USER:
     case UPDATE_USER:
+    case READ_USER:
       return {
         ...state,
         isAuthenticated: true,

@@ -15,7 +15,7 @@ import Button from '@material-ui/core/Button';
 
 // REDUX
 import { connect } from 'react-redux';
-import { findPeople } from './../../redux/action/user';
+import { findPeople, readUser } from './../../redux/action/user';
 
 // Font Awesome
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
@@ -45,7 +45,7 @@ const useStyles = makeStyles(theme => ({
   }
 }));
 
-const FindPeople = ({ findPeople, auth, users }) => {
+const FindPeople = ({ findPeople, auth, users, readUser }) => {
   const classes = useStyles();
 
   const { user } = auth;
@@ -56,14 +56,9 @@ const FindPeople = ({ findPeople, auth, users }) => {
     setOpen(false);
   };
 
-  useEffect(
-    () => {
-      if (user !== null) {
-        findPeople(user._id);
-      }
-    },
-    [findPeople, user]
-  );
+  useEffect(() => {
+    findPeople(user._id);
+  }, []);
 
   return (
     <div>
@@ -82,7 +77,7 @@ const FindPeople = ({ findPeople, auth, users }) => {
                     </ListItemAvatar>
                     <ListItemText primary={item.name} />
                     <ListItemSecondaryAction className={classes.follow}>
-                      <Link to={`/user/${item._id}`}>
+                      <Link to={'/user/' + item._id}>
                         <IconButton
                           variant="contained"
                           color="secondary"
@@ -129,4 +124,4 @@ const mapState = state => ({
   users: state.user.users
 });
 
-export default connect(mapState, { findPeople })(FindPeople);
+export default connect(mapState, { findPeople, readUser })(FindPeople);

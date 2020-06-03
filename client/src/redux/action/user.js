@@ -57,8 +57,13 @@ export const deleteUser = userId => async dispatch => {
 
 // Find People
 export const findPeople = userId => async dispatch => {
+  const config = {
+    headers: {
+      'Content-Type': 'multipart/form-data'
+    }
+  };
   try {
-    const res = await axios.get(`/api/v1/users/findpeople/${userId}`);
+    const res = await axios.get(`/api/v1/users/findpeople/${userId}`, config);
 
     dispatch({
       type: FIND_PEOPLE,

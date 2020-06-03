@@ -50,33 +50,29 @@ const UserProfile = ({ auth, posts, readUser, match, listPostByUser }) => {
 
   useEffect(
     () => {
-      init(match.params.userId);
+      readUser(match.params.userId);
+      // checkFollow(user);
+      listPostByUser(match.params.userId);
     },
-    [match.params.userId]
+    [listPostByUser, match.params.userId, readUser]
   );
 
-  const init = userId => {
-    readUser(userId);
-    checkFollow(user);
-  };
+  // useEffect(
+  //   () => {
+  //     if (user && user !== null) {
+  //     }
+  //   },
+  //   [listPostByUser, user]
+  // );
 
-  useEffect(
-    () => {
-      if (user && user !== null) {
-        listPostByUser(user._id);
-      }
-    },
-    [listPostByUser, user]
-  );
-
-  const checkFollow = user => {
-    if (user && user !== null) {
-      const match = user.followers.find(follower => {
-        return follower._id === user._id;
-      });
-      return match;
-    }
-  };
+  // const checkFollow = user => {
+  //   if (user && user !== null) {
+  //     const match = user.followers.find(follower => {
+  //       return follower._id === user._id;
+  //     });
+  //     return match;
+  //   }
+  // };
 
   const photoUrl =
     user && user._id
