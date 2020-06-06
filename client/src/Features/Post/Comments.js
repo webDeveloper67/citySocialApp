@@ -116,7 +116,7 @@ const Comments = ({ comment, postId, auth, updateComments, comments }) => {
         className={classes.cardHeader}
       />
       {comments &&
-        comments.map((item, i) => {
+        comments.comment.map((item, i) => {
           return (
             <CardHeader
               avatar={

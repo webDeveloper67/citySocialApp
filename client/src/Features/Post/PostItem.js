@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useRef } from 'react';
 import { Link } from 'react-router-dom';
 import { makeStyles } from '@material-ui/core/styles';
 import Card from '@material-ui/core/Card';
@@ -60,7 +60,14 @@ const useStyles = makeStyles(theme => ({
   }
 }));
 
-const PostItem = ({ post, auth, deletePost, likePost, unlikePost }) => {
+const PostItem = ({
+  post,
+  auth,
+  deletePost,
+  likePost,
+  unlikePost,
+  comments
+}) => {
   const classes = useStyles();
 
   const { user } = auth;
@@ -84,6 +91,15 @@ const PostItem = ({ post, auth, deletePost, likePost, unlikePost }) => {
       }
     },
     [post.likes, user, user._id]
+  );
+
+  comments = useRef(null);
+
+  useEffect(
+    () => {
+      console.log(comments.current.focus());
+    },
+    [comments]
   );
 
   const likePostFunc = () => {
@@ -160,7 +176,7 @@ const PostItem = ({ post, auth, deletePost, likePost, unlikePost }) => {
         >
           <FontAwesomeIcon icon={faComment} />
         </IconButton>{' '}
-        <span>{post.comments.length}</span>
+        <span ref={comments} />
       </CardActions>
       <Divider />
       <Comments postId={post._id} />
@@ -169,7 +185,8 @@ const PostItem = ({ post, auth, deletePost, likePost, unlikePost }) => {
 };
 
 const mapState = state => ({
-  auth: state.auth
+  auth: state.auth,
+  comments: state.post.comments
 });
 
 export default connect(mapState, {

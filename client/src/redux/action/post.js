@@ -146,7 +146,11 @@ export const comment = (userId, postId, comment) => async dispatch => {
 
     dispatch({
       type: COMMENT_POST,
-      payload: res.data
+      payload: {
+        userId,
+        postId,
+        comment: res.data.comments
+      }
     });
   } catch (error) {
     console.log(

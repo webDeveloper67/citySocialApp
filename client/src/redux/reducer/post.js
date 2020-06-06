@@ -11,7 +11,8 @@ import {
 
 const initialState = {
   posts: [],
-  post: null
+  post: null,
+  comments: []
 };
 
 export default function(state = initialState, action) {
@@ -57,8 +58,9 @@ export default function(state = initialState, action) {
     case COMMENT_POST:
       return {
         ...state,
-        posts: state.posts.filter(post => post._id !== payload._id),
-        post: { ...state.post, ...payload }
+        // posts: state.posts.filter(post => post._id !== payload._id),
+        // post: { ...state.post, ...payload }
+        comments: payload
       };
     default:
       return state;
