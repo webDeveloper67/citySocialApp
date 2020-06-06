@@ -1,8 +1,7 @@
 import { FIND_PEOPLE, GET_ALL_USERS, READ_USER } from './../types';
 
 const initialState = {
-  users: [],
-  user: {}
+  users: []
 };
 
 export default function(state = initialState, action) {
@@ -13,7 +12,8 @@ export default function(state = initialState, action) {
     case GET_ALL_USERS:
       return {
         ...state,
-        users: payload
+        users: payload,
+        user: {}
       };
     case READ_USER:
       return {

@@ -9,8 +9,8 @@ const resolvedImg = path.resolve(userImg);
 const User = require('./../models/UserModel');
 
 // Find a user by ID
-exports.userByID = async (req, res, next, id) => {
-  await User.findById(id)
+exports.userByID = (req, res, next, id) => {
+  User.findById(id)
     .populate('following', '_id name')
     .populate('follower', '_id name')
     .exec((err, user) => {
@@ -61,7 +61,7 @@ exports.defaultPhoto = (req, res) => {
 
 // Read Auth user
 exports.readUser = (req, res, next) => {
-  return res.json(req.user);
+  return res.json(req.profile);
 };
 
 // Update User

@@ -1,5 +1,5 @@
 import React, { useEffect, useCallback } from 'react';
-import { Link } from 'react-router-dom';
+import { Link, withRouter } from 'react-router-dom';
 import { makeStyles } from '@material-ui/core/styles';
 import Paper from '@material-ui/core/Paper';
 import Typography from '@material-ui/core/Typography';
@@ -43,7 +43,14 @@ const useStyles = makeStyles(theme => ({
   }
 }));
 
-const UserProfile = ({ auth, posts, readUser, match, listPostByUser }) => {
+const UserProfile = ({
+  auth,
+  posts,
+  readUser,
+  match,
+  listPostByUser,
+  currUser
+}) => {
   const classes = useStyles();
 
   const { user } = auth;
@@ -51,19 +58,10 @@ const UserProfile = ({ auth, posts, readUser, match, listPostByUser }) => {
   useEffect(
     () => {
       readUser(match.params.userId);
-      // checkFollow(user);
       listPostByUser(match.params.userId);
     },
     [listPostByUser, match.params.userId, readUser]
   );
-
-  // useEffect(
-  //   () => {
-  //     if (user && user !== null) {
-  //     }
-  //   },
-  //   [listPostByUser, user]
-  // );
 
   // const checkFollow = user => {
   //   if (user && user !== null) {
@@ -75,8 +73,8 @@ const UserProfile = ({ auth, posts, readUser, match, listPostByUser }) => {
   // };
 
   const photoUrl =
-    user && user._id
-      ? `/api/v1/users/photo/${user._id}?${new Date().getTime()}`
+    currUser && currUser._id
+      ? `/api/v1/users/photo/${currUser._id}?${new Date().getTime()}`
       : '/api/v1/users/defaultphoto';
   return (
     <Paper className={classes.root} elevation={4}>
@@ -88,9 +86,8 @@ const UserProfile = ({ auth, posts, readUser, match, listPostByUser }) => {
           <ListItemAvatar>
             <Avatar src={photoUrl} className={classes.bigAvatar} />
           </ListItemAvatar>
-          {user &&
-            user._id &&
-            <ListItemText primary={user.name} secondary={user.email} />}
+          {currUser &&
+            <ListItemText primary={currUser.name} secondary={currUser.email} />}
           {user && user._id && user.following
             ? <ListItemSecondaryAction>
                 <Link to={`/user/edit/${user._id}`}>
@@ -103,12 +100,11 @@ const UserProfile = ({ auth, posts, readUser, match, listPostByUser }) => {
             : <FollowProfileButton />}
         </ListItem>
         <Divider />
-        {user &&
-          user._id &&
+        {currUser &&
           <ListItem>
             <ListItemText
-              primary={user.about}
-              secondary={'Joined: ' + new Date(user.created).toDateString()}
+              primary={currUser.about}
+              secondary={'Joined: ' + new Date(currUser.created).toDateString()}
             />
           </ListItem>}
       </List>
@@ -119,7 +115,8 @@ const UserProfile = ({ auth, posts, readUser, match, listPostByUser }) => {
 
 const mapState = state => ({
   auth: state.auth,
-  posts: state.post.posts
+  posts: state.post.posts,
+  currUser: state.user.user
 });
 
 export default connect(mapState, { readUser, listPostByUser })(UserProfile);

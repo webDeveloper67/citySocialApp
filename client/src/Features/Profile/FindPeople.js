@@ -45,7 +45,7 @@ const useStyles = makeStyles(theme => ({
   }
 }));
 
-const FindPeople = ({ findPeople, auth, users, readUser }) => {
+const FindPeople = ({ findPeople, auth, readUser, users }) => {
   const classes = useStyles();
 
   const { user } = auth;
@@ -56,9 +56,14 @@ const FindPeople = ({ findPeople, auth, users, readUser }) => {
     setOpen(false);
   };
 
-  useEffect(() => {
-    findPeople(user._id);
-  }, []);
+  useEffect(
+    () => {
+      if (user && user !== null) {
+        findPeople(user._id);
+      }
+    },
+    [findPeople, user]
+  );
 
   return (
     <div>

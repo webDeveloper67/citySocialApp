@@ -25,7 +25,7 @@ router.route('/findpeople/:userId').get(authCont.protect, userCont.findPeople);
 
 router
   .route('/:userId')
-  .get(authCont.protect, userCont.readUser)
+  .get(userCont.readUser)
   .put(authCont.protect, userCont.updateUser)
   .delete(authCont.protect, userCont.deleteUser);
 

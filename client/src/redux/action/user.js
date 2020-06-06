@@ -65,6 +65,8 @@ export const findPeople = userId => async dispatch => {
   try {
     const res = await axios.get(`/api/v1/users/findpeople/${userId}`, config);
 
+    console.log(userId);
+    console.log(res.data);
     dispatch({
       type: FIND_PEOPLE,
       payload: res.data

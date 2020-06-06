@@ -90,10 +90,11 @@ const App = () => {
             <Route exact path="/signin" component={Signin} />
             <Route exact path="/users" component={Users} />
             <PrivateRoute
+              exact
               path="/user/edit/:userId"
               component={EditUserProfile}
             />
-            <Route path="/user/:userId" component={UserProfile} />
+            <Route exact path="/user/:userId" component={UserProfile} />
           </Switch>
         </Router>
       </MuiThemeProvider>
