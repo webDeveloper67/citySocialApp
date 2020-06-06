@@ -100,7 +100,7 @@ export const likePost = (params, postId) => async dispatch => {
 
     dispatch({
       type: LIKE_POST,
-      payload: { likes: res.data.likes }
+      payload: { postId, likes: res.data.likes }
     });
   } catch (error) {
     console.log(error);
@@ -121,7 +121,7 @@ export const unlikePost = (params, postId) => async dispatch => {
 
     dispatch({
       type: UNLIKE_POST,
-      payload: { likes: res.data.likes }
+      payload: { postId, likes: res.data.likes }
     });
   } catch (error) {
     console.log(error);

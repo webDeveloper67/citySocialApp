@@ -48,7 +48,10 @@ export default function(state = initialState, action) {
       return {
         ...state,
         posts: state.posts.map(
-          post => (post.likes ? { ...post, likes: payload.likes } : post)
+          post =>
+            post._id === payload.postId
+              ? { ...post, likes: payload.likes }
+              : post
         )
       };
     case COMMENT_POST:

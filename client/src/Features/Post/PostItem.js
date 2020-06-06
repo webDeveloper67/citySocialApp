@@ -94,7 +94,7 @@ const PostItem = ({ post, auth, deletePost, likePost, unlikePost }) => {
       },
       post._id
     );
-    setLikeData({ like: !like });
+    setLikeData({ ...likeData, like: !like });
   };
 
   const removePost = () => {

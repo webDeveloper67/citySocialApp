@@ -31,7 +31,7 @@ exports.getMe = (req, res, next) => {
 
 // Get auth user
 exports.getAuthUser = (req, res, next) => {
-  return res.json(req.profile);
+  return res.json(req.user);
 };
 
 // Get photo of a user
