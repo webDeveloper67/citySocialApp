@@ -8,7 +8,7 @@ import TextField from '@material-ui/core/TextField';
 
 // Redux
 import { connect } from 'react-redux';
-import { comment } from './../../redux/action/post';
+import { comment, updateComments } from './../../redux/action/post';
 
 // Font Awesome
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
@@ -43,7 +43,7 @@ const useStyles = makeStyles(theme => ({
   }
 }));
 
-const Comments = ({ comment, postId, auth, updateComments, comments }) => {
+const Comments = ({ comment, postId, auth, updateComments, post }) => {
   const classes = useStyles();
 
   const [commentText, setCommentText] = useState({
@@ -54,8 +54,6 @@ const Comments = ({ comment, postId, auth, updateComments, comments }) => {
 
   const { user } = auth;
 
-  const { _id: userId } = user;
-
   const handleChange = name => event => {
     setCommentText({ ...commentText, [name]: event.target.value });
   };
@@ -63,8 +61,11 @@ const Comments = ({ comment, postId, auth, updateComments, comments }) => {
   const addComment = event => {
     if (event.keyCode === 13 && event.target.value) {
       event.preventDefault();
-      comment(userId, postId, { text });
+      comment(user._id, postId, { text });
       setCommentText({ ...commentText, text: '' });
+      if (post && post !== null) {
+        updateComments(post.comments);
+      }
     }
   };
 
@@ -115,8 +116,9 @@ const Comments = ({ comment, postId, auth, updateComments, comments }) => {
         }
         className={classes.cardHeader}
       />
-      {comments &&
-        comments.comment.map((item, i) => {
+      {post &&
+        post.comments &&
+        post.comments.map((item, i) => {
           return (
             <CardHeader
               avatar={
@@ -137,7 +139,7 @@ const Comments = ({ comment, postId, auth, updateComments, comments }) => {
 
 const mapState = state => ({
   auth: state.auth,
-  comments: state.post.comments
+  post: state.post.post
 });
 
-export default connect(mapState, { comment })(Comments);
+export default connect(mapState, { comment, updateComments })(Comments);

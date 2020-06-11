@@ -22,12 +22,7 @@ import { faHeart as faHeartRegular } from '@fortawesome/free-regular-svg-icons';
 
 // Redux
 import { connect } from 'react-redux';
-import {
-  deletePost,
-  likePost,
-  unlikePost,
-  addComment
-} from './../../redux/action/post';
+import { deletePost, likePost, unlikePost } from './../../redux/action/post';
 
 const useStyles = makeStyles(theme => ({
   card: {
@@ -60,14 +55,7 @@ const useStyles = makeStyles(theme => ({
   }
 }));
 
-const PostItem = ({
-  post,
-  auth,
-  deletePost,
-  likePost,
-  unlikePost,
-  comments
-}) => {
+const PostItem = ({ post, auth, deletePost, likePost, unlikePost }) => {
   const classes = useStyles();
 
   const { user } = auth;
@@ -91,15 +79,6 @@ const PostItem = ({
       }
     },
     [post.likes, user, user._id]
-  );
-
-  comments = useRef(null);
-
-  useEffect(
-    () => {
-      console.log(comments.current.focus());
-    },
-    [comments]
   );
 
   const likePostFunc = () => {
@@ -176,7 +155,7 @@ const PostItem = ({
         >
           <FontAwesomeIcon icon={faComment} />
         </IconButton>{' '}
-        <span ref={comments} />
+        <span>{post.comments.length}</span>
       </CardActions>
       <Divider />
       <Comments postId={post._id} />
@@ -185,8 +164,7 @@ const PostItem = ({
 };
 
 const mapState = state => ({
-  auth: state.auth,
-  comments: state.post.comments
+  auth: state.auth
 });
 
 export default connect(mapState, {

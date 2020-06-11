@@ -8,6 +8,7 @@ import {
   LIKE_POST,
   UNLIKE_POST,
   COMMENT_POST,
+  UPDATE_COMMENT,
   UNCOMMENT_POST,
   ADD_COMMENT
 } from './../types';
@@ -48,7 +49,7 @@ export const createPost = (userId, postData) => async dispatch => {
 };
 
 // Add Post
-export const addPost = post => (dispatch, state) => {
+export const addPost = post => async (dispatch, state) => {
   let updatedPosts = state().post.posts;
 
   updatedPosts.unshift(post);
@@ -142,14 +143,12 @@ export const comment = (userId, postId, comment) => async dispatch => {
       postId,
       comment
     });
-    const res = await axios.put('/api/v1/posts/comment', body, config);
 
+    const res = await axios.put('/api/v1/posts/comment', body, config);
     dispatch({
       type: COMMENT_POST,
       payload: {
-        userId,
-        postId,
-        comment: res.data.comments
+        ...res.data
       }
     });
   } catch (error) {
@@ -159,3 +158,8 @@ export const comment = (userId, postId, comment) => async dispatch => {
     );
   }
 };
+
+export const updateComments = comments => ({
+  type: UPDATE_COMMENT,
+  payload: comments
+});
