@@ -60,7 +60,7 @@ const PostItem = ({ post, auth, deletePost, likePost, unlikePost }) => {
 
   const { user } = auth;
 
-  const { postedBy } = post;
+  // const { postedBy } = post;
 
   const [likeData, setLikeData] = useState({
     like: false
@@ -98,18 +98,18 @@ const PostItem = ({ post, auth, deletePost, likePost, unlikePost }) => {
 
   return (
     <Card className={classes.card} key={post._id}>
-      {postedBy &&
+      {post.postedBy &&
         <CardHeader
-          avatar={<Avatar src={`/api/v1/users/photo/${postedBy._id}`} />}
+          avatar={<Avatar src={`/api/v1/users/photo/${post.postedBy._id}`} />}
           action={
-            postedBy._id === user._id &&
+            post.postedBy._id === user._id &&
             <IconButton onClick={removePost}>
               <FontAwesomeIcon icon={faTrash} />
             </IconButton>
           }
           title={
-            <Link to={'/user/' + postedBy._id}>
-              {postedBy.name}
+            <Link to={'/user/' + post.postedBy._id}>
+              {post.postedBy.name}
             </Link>
           }
           subheader={new Date(post.created).toDateString()}

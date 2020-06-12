@@ -23,7 +23,7 @@ export const listSocialFeed = userId => async dispatch => {
       payload: res.data
     });
   } catch (error) {
-    console.log(error, '🤣');
+    console.log(error);
   }
 };
 
@@ -131,6 +131,7 @@ export const unlikePost = (params, postId) => async dispatch => {
 
 // Comment on a post
 export const comment = (userId, postId, comment) => async dispatch => {
+  console.log(postId, 'postId in action');
   try {
     const config = {
       headers: {
@@ -145,6 +146,7 @@ export const comment = (userId, postId, comment) => async dispatch => {
     });
 
     const res = await axios.put('/api/v1/posts/comment', body, config);
+
     dispatch({
       type: COMMENT_POST,
       payload: {

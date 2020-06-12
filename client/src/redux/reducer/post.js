@@ -12,7 +12,8 @@ import {
 
 const initialState = {
   posts: [],
-  post: null
+  post: null,
+  comments: []
 };
 
 export default function(state = initialState, action) {
@@ -31,12 +32,8 @@ export default function(state = initialState, action) {
     case ADD_POST:
       return {
         ...state,
-        // posts: state.posts.filter(post => post._id !== payload._id)
+        // posts: [payload, ...state.posts]
         posts: [...state.posts]
-        // posts: state.posts.filter(
-        //   post => (post._id !== payload._id ? state.post : [...state.post])
-        // )
-        // posts: state.posts.map(post => (post ? post : state.post))
       };
     case DELETE_POST:
       return {
@@ -65,12 +62,14 @@ export default function(state = initialState, action) {
       return {
         ...state,
         posts: state.posts.filter(post => post._id !== payload._id),
-        post: payload
+        post: payload,
+        comments: payload.comments
       };
+
     case UPDATE_COMMENT:
       return {
         ...state,
-        post: payload.comments
+        comments: payload
       };
     default:
       return state;

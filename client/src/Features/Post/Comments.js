@@ -43,7 +43,14 @@ const useStyles = makeStyles(theme => ({
   }
 }));
 
-const Comments = ({ comment, postId, auth, updateComments, post }) => {
+const Comments = ({
+  comment,
+  postId,
+  auth,
+  updateComments,
+  post,
+  comments
+}) => {
   const classes = useStyles();
 
   const [commentText, setCommentText] = useState({
@@ -63,11 +70,17 @@ const Comments = ({ comment, postId, auth, updateComments, post }) => {
       event.preventDefault();
       comment(user._id, postId, { text });
       setCommentText({ ...commentText, text: '' });
+    }
+  };
+
+  useEffect(
+    () => {
       if (post && post !== null) {
         updateComments(post.comments);
       }
-    }
-  };
+    },
+    [post, updateComments]
+  );
 
   const deleteComment = () => {
     console.log('delete comment func');
@@ -116,9 +129,8 @@ const Comments = ({ comment, postId, auth, updateComments, post }) => {
         }
         className={classes.cardHeader}
       />
-      {post &&
-        post.comments &&
-        post.comments.map((item, i) => {
+      {comments &&
+        comments.map((item, i) => {
           return (
             <CardHeader
               avatar={
@@ -139,7 +151,8 @@ const Comments = ({ comment, postId, auth, updateComments, post }) => {
 
 const mapState = state => ({
   auth: state.auth,
-  post: state.post.post
+  post: state.post.post,
+  comments: state.post.comments
 });
 
 export default connect(mapState, { comment, updateComments })(Comments);
