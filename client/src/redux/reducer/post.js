@@ -31,7 +31,17 @@ export default function(state = initialState, action) {
     case ADD_POST:
       return {
         ...state,
-        posts: [...state.posts]
+        // posts: [...state.posts],
+        // posts: [
+        //   ...state.posts,
+        //   ...new Map(state.posts.map(o => [o._id, o])).values()
+        // ]
+        posts: Object.values(
+          state.posts.reduce((r, o) => {
+            r[o._id] = o;
+            return r;
+          }, {})
+        )
       };
     case DELETE_POST:
       return {

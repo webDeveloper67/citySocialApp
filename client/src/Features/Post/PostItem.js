@@ -87,9 +87,12 @@ const PostItem = ({ post, auth, deletePost, likePost, unlikePost }) => {
     [post.likes, user, user._id]
   );
 
-  useEffect(() => {
-    setCommentData({ ...commentData, comments: post.comments });
-  }, []);
+  useEffect(
+    () => {
+      setCommentData({ ...commentData, comments: post.comments });
+    },
+    [post.comments]
+  );
 
   const likePostFunc = () => {
     let callApi = like ? unlikePost : likePost;
