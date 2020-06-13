@@ -131,7 +131,6 @@ export const unlikePost = (params, postId) => async dispatch => {
 
 // Comment on a post
 export const comment = (userId, postId, comment) => async dispatch => {
-  console.log(postId, 'postId in action');
   try {
     const config = {
       headers: {
