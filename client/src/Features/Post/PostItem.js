@@ -68,6 +68,12 @@ const PostItem = ({ post, auth, deletePost, likePost, unlikePost }) => {
 
   const { like } = likeData;
 
+  const [commentData, setCommentData] = useState({
+    comments: []
+  });
+
+  const { comments } = commentData;
+
   useEffect(
     () => {
       const checkLike = likeIndex => {
@@ -80,6 +86,10 @@ const PostItem = ({ post, auth, deletePost, likePost, unlikePost }) => {
     },
     [post.likes, user, user._id]
   );
+
+  useEffect(() => {
+    setCommentData({ ...commentData, comments: post.comments });
+  }, []);
 
   const likePostFunc = () => {
     let callApi = like ? unlikePost : likePost;
@@ -96,6 +106,9 @@ const PostItem = ({ post, auth, deletePost, likePost, unlikePost }) => {
     deletePost(post._id);
   };
 
+  const updateComments = comments => {
+    setCommentData({ ...commentData, comments: comments });
+  };
   return (
     <Card className={classes.card} key={post._id}>
       {post.postedBy &&
@@ -155,10 +168,14 @@ const PostItem = ({ post, auth, deletePost, likePost, unlikePost }) => {
         >
           <FontAwesomeIcon icon={faComment} />
         </IconButton>{' '}
-        <span>{post.comments.length}</span>
+        <span>{comments.length}</span>
       </CardActions>
       <Divider />
-      <Comments postId={post._id} />
+      <Comments
+        postId={post._id}
+        comments={comments}
+        updateComments={updateComments}
+      />
     </Card>
   );
 };

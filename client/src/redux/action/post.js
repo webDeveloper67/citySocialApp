@@ -49,7 +49,7 @@ export const createPost = (userId, postData) => async dispatch => {
 };
 
 // Add Post
-export const addPost = post => async (dispatch, state) => {
+export const addPost = post => (dispatch, state) => {
   let updatedPosts = state().post.posts;
 
   updatedPosts.unshift(post);
@@ -160,8 +160,3 @@ export const comment = (userId, postId, comment) => async dispatch => {
     );
   }
 };
-
-export const updateComments = comments => ({
-  type: UPDATE_COMMENT,
-  payload: comments
-});

@@ -6,8 +6,7 @@ import {
   LIST_POST_BY_USER,
   LIKE_POST,
   UNLIKE_POST,
-  COMMENT_POST,
-  UPDATE_COMMENT
+  COMMENT_POST
 } from './../types';
 
 const initialState = {
@@ -32,7 +31,6 @@ export default function(state = initialState, action) {
     case ADD_POST:
       return {
         ...state,
-        // posts: [payload, ...state.posts]
         posts: [...state.posts]
       };
     case DELETE_POST:
@@ -58,18 +56,10 @@ export default function(state = initialState, action) {
         )
       };
     case COMMENT_POST:
-      console.log(payload._id, 'comment post 🧩');
       return {
         ...state,
         posts: state.posts.filter(post => post._id !== payload._id),
-        post: payload,
-        comments: payload.comments
-      };
-
-    case UPDATE_COMMENT:
-      return {
-        ...state,
-        comments: payload
+        post: payload
       };
     default:
       return state;

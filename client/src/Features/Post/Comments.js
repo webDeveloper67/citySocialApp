@@ -8,7 +8,7 @@ import TextField from '@material-ui/core/TextField';
 
 // Redux
 import { connect } from 'react-redux';
-import { comment, updateComments } from './../../redux/action/post';
+import { comment } from './../../redux/action/post';
 
 // Font Awesome
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
@@ -73,14 +73,11 @@ const Comments = ({
     }
   };
 
-  useEffect(
-    () => {
-      if (post && post !== null) {
-        updateComments(post.comments);
-      }
-    },
-    [post, updateComments]
-  );
+  useEffect(() => {
+    if (post && post !== null) {
+      updateComments(post.comments);
+    }
+  }, []);
 
   const deleteComment = () => {
     console.log('delete comment func');
@@ -141,7 +138,7 @@ const Comments = ({
               }
               title={commentBody(item)}
               className={classes.cardHeader}
-              key={i}
+              key={item._id}
             />
           );
         })}
@@ -151,8 +148,7 @@ const Comments = ({
 
 const mapState = state => ({
   auth: state.auth,
-  post: state.post.post,
-  comments: state.post.comments
+  post: state.post.post
 });
 
-export default connect(mapState, { comment, updateComments })(Comments);
+export default connect(mapState, { comment })(Comments);

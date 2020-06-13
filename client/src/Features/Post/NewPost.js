@@ -58,7 +58,7 @@ const useStyles = makeStyles(theme => ({
   }
 }));
 
-const NewPost = ({ auth, createPost, post: { post }, addPost }) => {
+const NewPost = ({ auth, createPost, post, addPost }) => {
   const classes = useStyles();
 
   const { user } = auth;
@@ -80,7 +80,7 @@ const NewPost = ({ auth, createPost, post: { post }, addPost }) => {
 
   const submitPost = () => {
     createPost(user._id, postData.current);
-    setPostInfo({ text: '', photo: '' });
+    setPostInfo({ ...postInfo, text: '', photo: '' });
   };
 
   useEffect(
@@ -148,7 +148,7 @@ const NewPost = ({ auth, createPost, post: { post }, addPost }) => {
 
 const mapState = state => ({
   auth: state.auth,
-  post: state.post
+  post: state.post.post
 });
 
 export default connect(mapState, { createPost, addPost })(NewPost);
