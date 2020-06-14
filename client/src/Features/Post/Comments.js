@@ -1,14 +1,13 @@
 import React, { useState, useEffect } from 'react';
 import { Link } from 'react-router-dom';
 import { makeStyles } from '@material-ui/core/styles';
-import Icon from '@material-ui/core/Icon';
 import CardHeader from '@material-ui/core/CardHeader';
 import Avatar from '@material-ui/core/Avatar';
 import TextField from '@material-ui/core/TextField';
 
 // Redux
 import { connect } from 'react-redux';
-import { comment } from './../../redux/action/post';
+import { comment, updateComment } from './../../redux/action/post';
 
 // Font Awesome
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
@@ -43,14 +42,7 @@ const useStyles = makeStyles(theme => ({
   }
 }));
 
-const Comments = ({
-  comment,
-  postId,
-  auth,
-  updateComments,
-  post,
-  comments
-}) => {
+const Comments = ({ comment, postId, auth, updateComment, post }) => {
   const classes = useStyles();
 
   const [commentText, setCommentText] = useState({
@@ -68,14 +60,15 @@ const Comments = ({
   const addComment = event => {
     if (event.keyCode === 13 && event.target.value) {
       event.preventDefault();
+
       comment(user._id, postId, { text });
       setCommentText({ ...commentText, text: '' });
     }
   };
 
   useEffect(() => {
-    if (post && post !== null) {
-      updateComments(post.comments);
+    if (post && post._id === postId) {
+      updateComment(post.comments);
     }
   }, []);
 
@@ -126,21 +119,23 @@ const Comments = ({
         }
         className={classes.cardHeader}
       />
-      {comments &&
-        comments.map((item, i) => {
-          return (
-            <CardHeader
-              avatar={
-                <Avatar
-                  className={classes.smallAvatar}
-                  src={`/api/v1/users/photo/${item.postedBy._id}`}
-                />
-              }
-              title={commentBody(item)}
-              className={classes.cardHeader}
-              key={item._id}
-            />
-          );
+      {post &&
+        post.comments.map(item => {
+          if (post && post._id === postId) {
+            return (
+              <CardHeader
+                avatar={
+                  <Avatar
+                    className={classes.smallAvatar}
+                    src={`/api/v1/users/photo/${item.postedBy._id}`}
+                  />
+                }
+                title={commentBody(item)}
+                className={classes.cardHeader}
+                key={item._id}
+              />
+            );
+          }
         })}
     </div>
   );
@@ -151,4 +146,4 @@ const mapState = state => ({
   post: state.post.post
 });
 
-export default connect(mapState, { comment })(Comments);
+export default connect(mapState, { comment, updateComment })(Comments);

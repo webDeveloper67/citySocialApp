@@ -159,3 +159,11 @@ export const comment = (userId, postId, comment) => async dispatch => {
     );
   }
 };
+
+// Update Comments
+export const updateComment = comments => {
+  return {
+    type: UPDATE_COMMENT,
+    payload: comments
+  };
+};

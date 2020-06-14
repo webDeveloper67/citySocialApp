@@ -22,7 +22,12 @@ import { faHeart as faHeartRegular } from '@fortawesome/free-regular-svg-icons';
 
 // Redux
 import { connect } from 'react-redux';
-import { deletePost, likePost, unlikePost } from './../../redux/action/post';
+import {
+  deletePost,
+  likePost,
+  unlikePost,
+  updateComment
+} from './../../redux/action/post';
 
 const useStyles = makeStyles(theme => ({
   card: {
@@ -55,12 +60,18 @@ const useStyles = makeStyles(theme => ({
   }
 }));
 
-const PostItem = ({ post, auth, deletePost, likePost, unlikePost }) => {
+const PostItem = ({
+  post,
+  auth,
+  deletePost,
+  likePost,
+  unlikePost,
+  updateComment,
+  comments
+}) => {
   const classes = useStyles();
 
   const { user } = auth;
-
-  // const { postedBy } = post;
 
   const [likeData, setLikeData] = useState({
     like: false
@@ -68,11 +79,11 @@ const PostItem = ({ post, auth, deletePost, likePost, unlikePost }) => {
 
   const { like } = likeData;
 
-  const [commentData, setCommentData] = useState({
-    comments: []
-  });
+  // const [commentData, setCommentData] = useState({
+  //   comments: []
+  // });
 
-  const { comments } = commentData;
+  // const { comments } = commentData;
 
   useEffect(
     () => {
@@ -87,12 +98,18 @@ const PostItem = ({ post, auth, deletePost, likePost, unlikePost }) => {
     [post.likes, user, user._id]
   );
 
-  useEffect(
-    () => {
-      setCommentData({ ...commentData, comments: post.comments });
-    },
-    [post.comments]
-  );
+  // useEffect(
+  //   () => {
+  //     setCommentData({ ...commentData, comments: post.comments });
+  //   },
+  //   [post.comments]
+  // );
+
+  // useEffect(() => {
+  //   if (post && post !== null) {
+  //     updateComment(post.comments);
+  //   }
+  // }, []);
 
   const likePostFunc = () => {
     let callApi = like ? unlikePost : likePost;
@@ -109,9 +126,9 @@ const PostItem = ({ post, auth, deletePost, likePost, unlikePost }) => {
     deletePost(post._id);
   };
 
-  const updateComments = comments => {
-    setCommentData({ ...commentData, comments: comments });
-  };
+  // const updateComments = comments => {
+  //   setCommentData({ ...commentData, comments: comments });
+  // };
   return (
     <Card className={classes.card} key={post._id}>
       {post.postedBy &&
@@ -171,24 +188,23 @@ const PostItem = ({ post, auth, deletePost, likePost, unlikePost }) => {
         >
           <FontAwesomeIcon icon={faComment} />
         </IconButton>{' '}
-        <span>{comments.length}</span>
+        <span>{post.comments.length}</span>
       </CardActions>
       <Divider />
-      <Comments
-        postId={post._id}
-        comments={comments}
-        updateComments={updateComments}
-      />
+      <Comments postId={post._id} />
     </Card>
   );
 };
 
 const mapState = state => ({
   auth: state.auth
+  // post: state.post.post,
+  // comments: state.post.comments
 });
 
 export default connect(mapState, {
   deletePost,
   likePost,
-  unlikePost
+  unlikePost,
+  updateComment
 })(PostItem);
