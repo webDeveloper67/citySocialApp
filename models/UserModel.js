@@ -63,6 +63,6 @@ userSchema.pre(/^find/, function(next) {
   next();
 });
 
-const User = mongoose.model('User', userSchema, 'users');
+const User = mongoose.model('User', userSchema);
 
 module.exports = User;

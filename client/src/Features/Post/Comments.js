@@ -66,11 +66,14 @@ const Comments = ({ comment, postId, auth, updateComment, post }) => {
     }
   };
 
-  useEffect(() => {
-    if (post && post._id === postId) {
-      updateComment(post.comments);
-    }
-  }, []);
+  useEffect(
+    () => {
+      if (post && post._id === postId) {
+        updateComment(post.comments);
+      }
+    },
+    [post, postId, updateComment]
+  );
 
   const deleteComment = () => {
     console.log('delete comment func');

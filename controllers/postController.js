@@ -3,6 +3,7 @@ const ErrorResponse = require('./../helpers/ErrorResponse');
 const formidable = require('formidable');
 const fs = require('fs');
 const Post = require('./../models/PostModel');
+const { text } = require('body-parser');
 
 // create a post
 exports.createPost = asyncMiddleware((req, res, next) => {
@@ -35,7 +36,7 @@ exports.createPost = asyncMiddleware((req, res, next) => {
 });
 
 // get post by its ID
-exports.postByID = async (req, res, next, id) => {
+exports.postByID = (req, res, next, id) => {
   Post.findById(id).populate('postedBy', '_id name').exec((err, post) => {
     if (err || !post || post === []) {
       return next(new ErrorResponse('Post not found!', 400));
@@ -49,23 +50,6 @@ exports.postByID = async (req, res, next, id) => {
 exports.postPhoto = (req, res, next) => {
   res.set('Content-Type', req.post.photo.contentType);
   return res.send(req.post.photo.data);
-};
-
-// Get posts by UserId
-exports.listPostByUser = async (req, res, next) => {
-  await Post.find({ postedBy: req.profile._id })
-    .populate('comments', 'text created')
-    .populate('comments.postedBy', '_id name')
-    .populate('postedBy', '_id name')
-    .sort('-created')
-    .exec((err, posts) => {
-      if (!posts || err || posts === []) {
-        return next(
-          new ErrorResponse('Posts for this user can not be found', 400)
-        );
-      }
-      res.json(posts);
-    });
 };
 
 // like a post
@@ -96,6 +80,14 @@ exports.unlikePost = asyncMiddleware(async (req, res, next) => {
   });
 });
 
+// {
+// 	"comment": {
+// 		"text": "populate not working"
+// 	},
+// 	"userId": "5ecb776efb6d230460544a6f",
+// 	"postId": "5ecb838fa7a00706fca1eeff"
+// }
+
 // comment over a post
 exports.commentPost = (req, res, next) => {
   let comment = req.body.comment;
@@ -112,6 +104,8 @@ exports.commentPost = (req, res, next) => {
       if (err) {
         return next(new ErrorResponse('You can not comment on this post', 400));
       }
+      console.log(result, 'result 🤩');
+
       res.json(result);
     });
 };
@@ -168,8 +162,8 @@ exports.listSocialFeed = asyncMiddleware(async (req, res, next) => {
   following.push(req.profile._id);
 
   await Post.find({ postedBy: { $in: req.profile.following } })
-    .populate('comments', 'text created')
-    .populate('comments.postedBy', '_id name')
+    .populate('comment', 'text created')
+    .populate('comment.postedBy', '_id name')
     .populate('postedBy', '_id name')
     .sort('-created')
     .exec((err, posts) => {
@@ -179,3 +173,20 @@ exports.listSocialFeed = asyncMiddleware(async (req, res, next) => {
       res.json(posts);
     });
 });
+
+// Get posts by UserId
+exports.listPostByUser = (req, res, next) => {
+  console.log(req.profile._id, '🤓');
+  Post.find({ postedBy: req.profile._id })
+    .populate('comments', 'text created')
+    .populate('comments.postedBy', '_id name')
+    .populate('postedBy', '_id name')
+    .exec((err, posts) => {
+      if (err) {
+        return res.status(400).json({
+          error: 'errorHandler.getErrorMessage(err)'
+        });
+      }
+      res.json(posts);
+    });
+};

@@ -1,4 +1,4 @@
-import React, { useState, useEffect, useRef } from 'react';
+import React, { useState, useEffect } from 'react';
 import { Link } from 'react-router-dom';
 import { makeStyles } from '@material-ui/core/styles';
 import Card from '@material-ui/core/Card';
@@ -60,15 +60,7 @@ const useStyles = makeStyles(theme => ({
   }
 }));
 
-const PostItem = ({
-  post,
-  auth,
-  deletePost,
-  likePost,
-  unlikePost,
-  updateComment,
-  comments
-}) => {
+const PostItem = ({ post, auth, deletePost, likePost, unlikePost }) => {
   const classes = useStyles();
 
   const { user } = auth;
@@ -78,12 +70,6 @@ const PostItem = ({
   });
 
   const { like } = likeData;
-
-  // const [commentData, setCommentData] = useState({
-  //   comments: []
-  // });
-
-  // const { comments } = commentData;
 
   useEffect(
     () => {
@@ -98,18 +84,11 @@ const PostItem = ({
     [post.likes, user, user._id]
   );
 
-  // useEffect(
-  //   () => {
-  //     setCommentData({ ...commentData, comments: post.comments });
-  //   },
-  //   [post.comments]
-  // );
-
-  // useEffect(() => {
-  //   if (post && post !== null) {
-  //     updateComment(post.comments);
-  //   }
-  // }, []);
+  useEffect(() => {
+    if (post) {
+      updateComment(post.comments);
+    }
+  }, []);
 
   const likePostFunc = () => {
     let callApi = like ? unlikePost : likePost;
@@ -126,9 +105,6 @@ const PostItem = ({
     deletePost(post._id);
   };
 
-  // const updateComments = comments => {
-  //   setCommentData({ ...commentData, comments: comments });
-  // };
   return (
     <Card className={classes.card} key={post._id}>
       {post.postedBy &&
@@ -198,8 +174,6 @@ const PostItem = ({
 
 const mapState = state => ({
   auth: state.auth
-  // post: state.post.post,
-  // comments: state.post.comments
 });
 
 export default connect(mapState, {
