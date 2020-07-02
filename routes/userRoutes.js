@@ -8,7 +8,7 @@ router.post('/login', authCont.loginUser);
 
 router.route('/').get(userCont.listUsers);
 
-router.get('/me', authCont.protect, userCont.getMe, userCont.getAuthUser);
+router.get('/me', authCont.protect, userCont.getAuthUser);
 
 router.route('/defaultphoto').get(userCont.defaultPhoto);
 router.route('/photo/:userId').get(userCont.userPhoto, userCont.defaultPhoto);

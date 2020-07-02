@@ -21,8 +21,10 @@ export default function(state = initialState, action) {
 
   switch (type) {
     case LIST_SOCIAL_FEEDS:
+    case UPDATE_COMMENT:
       return {
-        posts: payload
+        posts: payload,
+        comments: payload.comments
       };
     case CREATE_POST:
       return {
@@ -68,11 +70,11 @@ export default function(state = initialState, action) {
         posts: state.posts.filter(post => post._id !== payload._id),
         post: payload
       };
-    case UPDATE_COMMENT:
-      return {
-        ...state,
-        comments: payload
-      };
+    // case UPDATE_COMMENT:
+    //   return {
+    //     ...state,
+    //     comments: payload
+    //   };
     default:
       return state;
   }

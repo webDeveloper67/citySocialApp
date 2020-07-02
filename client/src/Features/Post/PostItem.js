@@ -156,7 +156,7 @@ const PostItem = ({ post, auth, deletePost, likePost, unlikePost }) => {
             >
               <FontAwesomeIcon icon={faHeartRegular} />
             </IconButton>}
-        <span>{post.likes.length}</span>
+        <span>{post && post.likes.length}</span>
         <IconButton
           className={classes.button}
           aria-label="Comment"

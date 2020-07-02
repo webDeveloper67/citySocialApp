@@ -23,11 +23,12 @@ exports.userByID = (req, res, next, id) => {
 };
 
 // setting userId from protect Middleware
-exports.getMe = (req, res, next) => {
-  req.profile = req.user;
+// exports.getMe = (req, res, next) => {
+//   console.log(req.user, 'req.user 😡😡😡');
+//   req.profile = req.user;
 
-  next();
-};
+//   next();
+// };
 
 // Get auth user
 exports.getAuthUser = (req, res, next) => {
@@ -61,7 +62,7 @@ exports.defaultPhoto = (req, res) => {
 
 // Read Auth user
 exports.readUser = (req, res, next) => {
-  return res.json(req.profile);
+  return res.json(req.user);
 };
 
 // Update User
@@ -94,7 +95,7 @@ exports.updateUser = asyncMiddleware(async (req, res, next) => {
 
 // Remove or delete User
 exports.deleteUser = asyncMiddleware(async (req, res, next) => {
-  let user = req.profile;
+  let user = req.user;
 
   await User.findByIdAndUpdate(user, { active: false });
 
@@ -106,8 +107,8 @@ exports.deleteUser = asyncMiddleware(async (req, res, next) => {
 
 // findPeople
 exports.findPeople = asyncMiddleware((req, res, next) => {
-  let following = req.profile.following;
-  following.push(req.profile._id);
+  let following = req.user.following;
+  following.push(req.user._id);
 
   User.find({ _id: { $nin: following } }, (err, users) => {
     if (err) {
