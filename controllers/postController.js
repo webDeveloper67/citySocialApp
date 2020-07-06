@@ -36,29 +36,15 @@ exports.createPost = asyncMiddleware((req, res, next) => {
 
 // get post by its ID
 exports.postByID = (req, res, next, id) => {
-  Post.findById(id).populate('postedBy', '_id name').exec((err, post) => {
-    if (err || !post || post === []) {
-      return next(new ErrorResponse('Post not found!', 400));
-    }
-    req.post = post;
-    next();
-  });
-};
-
-// Get posts by UserId
-exports.listPostByUser = (req, res, next) => {
-  console.log(req.user._id, 'req.user._id😏');
-  Post.find({ postedBy: req.user._id })
+  Post.findById(id)
     .populate('postedBy', '_id name')
     .populate('comments', 'text created')
-    .populate('comments.postedBy', '_id name')
-    .exec((err, posts) => {
-      if (err) {
-        return res.status(400).json({
-          error: 'errorHandler.getErrorMessage(err)'
-        });
+    .exec((err, post) => {
+      if (err || !post || post === []) {
+        return next(new ErrorResponse('Post not found!', 400));
       }
-      res.json(posts);
+      req.post = post;
+      next();
     });
 };
 
@@ -97,21 +83,22 @@ exports.unlikePost = asyncMiddleware(async (req, res, next) => {
 });
 
 // comment over a post
-exports.commentPost = (req, res, next) => {
-  let comment = {};
+exports.commentPost = (req, res) => {
+  let comment = req.body.comment;
   comment.postedBy = req.body.userId;
-  comment.text = req.body.comment;
-
-  Post.findByIdAndUpdate(req.body.postId, {
-    new: true
-  })
+  Post.findByIdAndUpdate(
+    req.body.postId,
+    { $push: { comments: comment } },
+    { new: true }
+  )
     .populate('comments.postedBy', '_id name')
     .populate('postedBy', '_id name')
     .exec((err, result) => {
       if (err) {
-        return next(new ErrorResponse('You can not comment on this post', 400));
+        return res.status(400).json({
+          error: 'comment do not added'
+        });
       }
-
       res.json(result);
     });
 };
@@ -161,16 +148,38 @@ exports.postOwner = async (req, res, next) => {
   next();
 };
 
-// Get Social Feeds
-exports.listSocialFeed = (req, res, next) => {
-  let following = req.user.following;
-  following.push(req.user._id);
-
-  Post.find({ postedBy: { $in: req.user.following } })
-    .populate('comment', 'text created')
-    .populate('comment.postedBy', '_id name')
+// Get posts by UserId
+exports.listPostByUser = async (req, res) => {
+  await Post.find({ postedBy: req.profile._id })
+    // .populate('comment', 'text created')
+    // .populate('comment.postedBy', '_id name')
+    // .populate({
+    //   path: 'postedBy',
+    //   select: '_id name',
+    //   model: 'User'
+    // })
+    // .sort('-created')
     .populate('postedBy', '_id name')
-    .sort('-created')
+    .exec((err, posts) => {
+      if (err) {
+        return res.status(400).json({
+          error: 'errorHandler.getErrorMessage(err)'
+        });
+      }
+      res.json(posts);
+    });
+};
+
+// Get Social Feeds
+exports.listSocialFeed = async (req, res, next) => {
+  let following = req.profile.following;
+  following.push(req.profile._id);
+
+  await Post.find({ postedBy: { $in: req.profile.following } })
+    // .populate('comment', 'text created')
+    // .populate('comment.postedBy', '_id name')
+    .populate('postedBy', '_id name')
+    // .sort('-created')
     .exec((err, posts) => {
       if (!posts || err || posts === []) {
         return next(new ErrorResponse('Posts not found', 400));
